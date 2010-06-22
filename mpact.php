@@ -197,6 +197,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
       ###############################################
       case "statistics":
 
+        echo "<p>\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_incomplete\">LIS Incomplete</a> - \n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_a\">Top A</a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_c\">Top C</a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_ac\">Top A+C</a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_t\">Top T</a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_g\">Top G</a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_w\">Top W</a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_td\">Top T<sub>D</sub></a> -\n";
+        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_ta\">Top T<sub>A</sub></a>\n";
+        echo "</p>\n";
+
         echo "<h3>Overall MPACT Statistics</h3>\n";
 
         echo "<table border='1'>\n";
@@ -2859,29 +2871,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abtract</a>\n";
         echo "</p>\n";
 
+        echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a></p>\n";
+
         echo "<br /><br />";
         echo "<h3>Standard Pages</h3>\n";
 
       }
 
-      echo "<p>\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_incomplete\">LIS Incomplete</a> - \n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_a\">Top A</a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_c\">Top C</a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_ac\">Top A+C</a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_t\">Top T</a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_g\">Top G</a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_w\">Top W</a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_td\">Top T<sub>D</sub></a> -\n";
-      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=top_ta\">Top T<sub>A</sub></a>\n";
-      echo "</p>\n";
-
       show_alphabet();
-
-      if (is_admin())
-      {
-        echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a></p>\n";
-      }
 
     }
 
