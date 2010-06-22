@@ -2883,7 +2883,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     {
       // DISPLAY THE FRONT PAGE
 
-      action_box("",0,"./");
+      action_box("Front Page...",0.1,"./");
 
     }
 
