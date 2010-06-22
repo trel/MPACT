@@ -59,7 +59,6 @@ xhtml_web_header();
 <div id="alumni">
   <h1>Project Alumni</h1>
     <ul>
-      <li><a href="http://ils.unc.edu/~march/">Gary Marchionini</a></li>
       <li><a href="http://sils.unc.edu/~songphan/">Songphan Choemprayong</a></li>
       <li><a href="http://sils.unc.edu/research/projects/TRLN_Davis.htm">Cheryl Davis</a></li>
       <li>Jessica Zellers</li>
