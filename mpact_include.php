@@ -212,7 +212,7 @@ echo "
   <tr>
   
     <td>
-      <a href=\"http://www.slis.indiana.edu/\"><img src=\"./images/slis_logo.png\" width=\"200\"></a>
+      <a href=\"http://www.slis.indiana.edu/\"><img src=\"./images/slis_logo_crimson.png\" width=\"200\"></a>
     </td>
     
     <td>
