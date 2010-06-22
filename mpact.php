@@ -2157,6 +2157,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         $disciplines = find_disciplines();
         $disciplinecounts = find_discipline_counts();
 
+        if (is_admin()){
+          echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_discipline\">Add a New Discipline to the Database</a></p>\n";
+        }
+
         echo "<h2>Disciplines Represented Across All Schools</h2>\n";
 
         echo "<p>\n";
@@ -2471,6 +2475,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         $schools = find_schools();
         $schoolcounts = find_school_counts();
 
+        if (is_admin()){
+          echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_school\">Add a New School to the Database</a></p>\n";
+        }
         echo "<h2>Schools Represented Across All Disciplines</h2>\n";
 
         echo "<p>\n";
@@ -2851,9 +2858,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_lis\">LIS, No Title</a> - \n";
         echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abtract</a>\n";
         echo "</p>\n";
-
-        echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_school\">Add a New School to the Database</a></p>\n";
-        echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_discipline\">Add a New Discipline to the Database</a></p>\n";
 
         echo "<br /><br />";
         echo "<h3>Standard Pages</h3>\n";
