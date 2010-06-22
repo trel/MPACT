@@ -1,0 +1,21 @@
+<?php
+
+###########    DATABASE STUFF     ####################
+
+// copy this file to mpact_db.php and make any necessary changes
+
+// these need to be right or nothing will work
+
+$DB_HOSTNAME = "localhost";     // probably right
+$DB_DATABASE = "mpact";
+$DB_USER     = "root";
+$DB_PASS     = "";
+$DB_SOCKET   = "";
+if ($DB_SOCKET!=""){$DB_HOSTNAME=$DB_HOSTNAME.":".$DB_SOCKET;}
+
+$dbh = mysql_connect ($DB_HOSTNAME,$DB_USER,$DB_PASS) or
+  die ('Cannot connect to the database: ' . mysql_error());
+  $DB_SELECTED = mysql_select_db($DB_DATABASE) or
+  die ('Cannot connect to the database: ' . mysql_error());
+
+?>
