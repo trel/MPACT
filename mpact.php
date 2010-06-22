@@ -132,6 +132,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         break;
       ###############################################
+      case "admin";
+
+        if (is_admin())
+        {
+          echo "<h3>Administrator Pages</h3>\n";
+
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_logs\">Show Logs</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_orphans\">Show Orphans</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=citation_correlation\">Citation Correlation</a>\n";
+          echo "</p>\n";
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">LIS, Graduates By Year</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profswithoutdiss\">LIS Professors without Dissertations</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profsnotfromlis\">LIS Professors without LIS Dissertations</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_history\">LIS History</a>\n";
+          echo "</p>\n";
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_multi_dissertations\">People with Multiple Dissertations (Errors in DB)</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_zero_year\">Year 0000</a>\n";
+          echo "</p>\n";
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract\">No Title/Abstract</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract_lis\">LIS, No Title/Abstract</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_lis\">LIS, No Title</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abtract</a>\n";
+          echo "</p>\n";
+
+          echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a></p>\n";
+
+        }
+        else
+        {
+          not_admin();
+        }
+
+        break;
+      ###############################################
       case "glossary_edit";
 
         if ( isset($_GET['id']) && is_admin() ){
@@ -2845,40 +2883,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     {
       // DISPLAY THE FRONT PAGE
 
-      if (is_admin())
-      {
-        echo "<h3>Administrator Pages</h3>\n";
-
-        echo "<p>\n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_logs\">Show Logs</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_orphans\">Show Orphans</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=citation_correlation\">Citation Correlation</a>\n";
-        echo "</p>\n";
-        echo "<p>\n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">LIS, Graduates By Year</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profswithoutdiss\">LIS Professors without Dissertations</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profsnotfromlis\">LIS Professors without LIS Dissertations</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_history\">LIS History</a>\n";
-        echo "</p>\n";
-        echo "<p>\n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_multi_dissertations\">People with Multiple Dissertations (Errors in DB)</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_zero_year\">Year 0000</a>\n";
-        echo "</p>\n";
-        echo "<p>\n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract\">No Title/Abstract</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract_lis\">LIS, No Title/Abstract</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_lis\">LIS, No Title</a> - \n";
-        echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abtract</a>\n";
-        echo "</p>\n";
-
-        echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a></p>\n";
-
-        echo "<br /><br />";
-        echo "<h3>Standard Pages</h3>\n";
-
-      }
-
-      show_alphabet();
+      action_box("",0,"./");
 
     }
 

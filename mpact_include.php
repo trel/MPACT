@@ -365,7 +365,7 @@ function show_alphabet()
   $alphabet_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   $alphabet = preg_split('//', $alphabet_letters, -1, PREG_SPLIT_NO_EMPTY);
 
-   echo "<div class=\"alphabet\">\n";
+  echo "<div class=\"alphabet centered\">\n";
   echo "<p>Dissertation Authors and Mentors by Last Name</p>";
   echo "<p>";
   foreach ($alphabet as $letter)
