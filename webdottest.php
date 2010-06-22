@@ -3,8 +3,10 @@
 
 <?php
 
+require 'envsetup.php';
+
 # -------------------------------------------------------------------------------
-function get_environment_info()
+function get_environment_info2()
 {
   $host_info = array();
   $hostname = $_SERVER['SERVER_NAME'];
@@ -19,7 +21,7 @@ function get_environment_info()
     $host_info['appdir']      = "/export/sunsite/users/mpact/public_html";
     $host_info['webdir']      = "http://www.ibiblio.org/mpact";
     $host_info['dotcachedir'] = "dotgraphs";
-    $host_info['dotfiletype'] = "png";
+    $host_info['dotfiletype'] = "gif";
     $host_info['dotfontface'] = "cour";
   }
   else
@@ -32,7 +34,7 @@ function get_environment_info()
 }
 # -------------------------------------------------------------------------------
 
-$host_info = get_environment_info();
+$host_info = get_environment_info2();
 $jesse_h_shera = 11;   # Jesse H. Shera is the default
 if (isset($_GET['id'])){
   $person = ((int)$_GET['id'] != 0) ? (int)$_GET['id'] : $jesse_h_shera;
@@ -45,6 +47,7 @@ echo "person = $person<br />";
 $appcache = $host_info['appdir']."/".$host_info['dotcachedir'];
 $appcache = $host_info['dotcachedir'];
 $webcache = $host_info['webdir']."/".$host_info['dotcachedir'];
+$dotfilename = "$appcache/$person.dot";
 $appfilename = "$appcache/$person.".$host_info['dotfiletype'];
 $webfilename = "$webcache/$person.".$host_info['dotfiletype'];
 $appimagemap = "$appcache/$person.map";
@@ -74,11 +77,11 @@ else
   # generate dotfile
   $dotfilecontents = generate_dotfile($person);
   echo "dotfilecontents = <table border=1><tr><td>$dotfilecontents</td></tr></table>";
-  $fh = fopen($appfilename, 'w');
+  $fh = fopen($dotfilename, 'w');
   fwrite($fh, $dotfilecontents);
   fclose($fh);
   # generate graph
-  $getandgenerategraph = "cat $appfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename";
+  $getandgenerategraph = "cat $dotfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename";
   echo "getandgenerategraph = [$getandgenerategraph]<br />";
 #  exec($getandgenerategraph);
 
