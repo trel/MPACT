@@ -2499,10 +2499,10 @@ function generate_dotfile($passed_person){
   else
   {
     $dotfilecontents = "";
-    $dotfilecontents =. "digraph familytree\n";
-    $dotfilecontents =. "{\n";
-    $dotfilecontents =. "rankdir=\"LR\"\n";
-    $dotfilecontents =. "node [fontname = Times, fontsize=10, shape = rect, height=.15]\n";
+    $dotfilecontents .= "digraph familytree\n";
+    $dotfilecontents .= "{\n";
+    $dotfilecontents .= "rankdir=\"LR\"\n";
+    $dotfilecontents .= "node [fontname = Times, fontsize=10, shape = rect, height=.15]\n";
     # ancestors
     $upgroup = array();
     $upgroup[] = $passed_person;
@@ -2510,11 +2510,11 @@ function generate_dotfile($passed_person){
     foreach ($ancestors as $one)
     {
       $person = find_person($one);
-      $dotfilecontents =. "$one [label = \"".$person['fullname']."\" URL=\"mpact.php?op=show_tree&id=".$one."\"];\n";
+      $dotfilecontents .= "$one [label = \"".$person['fullname']."\" URL=\"mpact.php?op=show_tree&id=".$one."\"];\n";
       $advisors = find_advisors_for_person($one);
       foreach ($advisors as $adv)
       {
-        $dotfilecontents =. "$adv -> $one;\n";
+        $dotfilecontents .= "$adv -> $one;\n";
       }
     }
     # descendents
@@ -2524,18 +2524,18 @@ function generate_dotfile($passed_person){
     foreach ($descendents as $one)
     {
       $person = find_person($one);
-      $dotfilecontents =. "$one [label = \"".$person['fullname']."\" URL=\"mpact.php?op=show_tree&id=".$one."\"";
+      $dotfilecontents .= "$one [label = \"".$person['fullname']."\" URL=\"mpact.php?op=show_tree&id=".$one."\"";
       if ($one == $passed_person){
-        $dotfilecontents =. " color=\"red\" style=\"filled\" fillcolor=\"grey\"";
+        $dotfilecontents .= " color=\"red\" style=\"filled\" fillcolor=\"grey\"";
       }
-      $dotfilecontents =. "];\n";
+      $dotfilecontents .= "];\n";
       $advisees = find_advisorships_under_person($one);
       foreach ($advisees as $adv)
       {
-        $dotfilecontents =. "$one -> $adv;\n";
+        $dotfilecontents .= "$one -> $adv;\n";
       }
     }
-    $dotfilecontents =. "}\n";
+    $dotfilecontents .= "}\n";
 
     return $dotfilecontents;
   }
