@@ -240,6 +240,7 @@ if (is_admin()){
   <input type=\"hidden\" name=\"op\" value=\"search_notes\">
   <span class=\"navtext centered\">Admin Notes Search:&nbsp;<input type=\"text\" name=\"qn\" size=\"15\" value=\"".$_POST['qn']."\"></span>
   </form>";
+  echo "<br /><span class=\"navtextlinks\"><a href=\"mpact.php?op=admin\">Administrator Pages</a></span>";
 }
 echo "    </td>
 
