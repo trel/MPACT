@@ -14,7 +14,7 @@ function get_environment_info()
   {
     # army's install on ibiblio
     $host_info['hostname']    = "ibiblio";
-    $host_info['ownername']   = "tgr";
+    $host_info['ownername']   = "mpact";
     $host_info['dotlocation'] = "/export/sunsite/users/mpact/terrelllocal/bin/dot";
     $host_info['appdir']      = "/export/sunsite/users/mpact/public_html";
     $host_info['webdir']      = "http://www.ibiblio.org/mpact";
@@ -71,13 +71,17 @@ else
     exec($chowncmd);
     echo "cachedir - CREATED<br />";
   }
-  # retrieve dotfile and generate graph
-  $dotfileurl = $host_info['webdir']."/dotfile.php?id=$person";
-  echo "dotfileurl = $dotfileurl<br />";
-  $authforcurl = ($host_info['hostname'] == "ibiblio" ? "-u army:army" : "");
-  $getandgenerategraph = "curl -s $authforcurl \"$dotfileurl\" | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename";
+  # generate dotfile
+  $dotfilecontents = generate_dotfile($person);
+  echo "dotfilecontents = <table border=1><tr><td>$dotfilecontents</td></tr></table>";
+  $fh = fopen($appfilename, 'w');
+  fwrite($fh, $dotfilecontents);
+  fclose($fh);
+  # generate graph
+  $getandgenerategraph = "cat $appfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename";
   echo "getandgenerategraph = [$getandgenerategraph]<br />";
-  exec($getandgenerategraph);
+#  exec($getandgenerategraph);
+
 }
 ?>
 <br />

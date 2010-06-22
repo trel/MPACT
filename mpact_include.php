@@ -2490,6 +2490,58 @@ function narray_slice($array, $offset, $length) {
 }
 
 # -------------------------------------------------------------------------------
+function generate_dotfile($passed_person){
+  $a = find_person($passed_person);
+  if ($a == null)
+  {
+    return 0;
+  }
+  else
+  {
+    $dotfilecontents = "";
+    $dotfilecontents =. "digraph familytree\n";
+    $dotfilecontents =. "{\n";
+    $dotfilecontents =. "rankdir=\"LR\"\n";
+    $dotfilecontents =. "node [fontname = Times, fontsize=10, shape = rect, height=.15]\n";
+    # ancestors
+    $upgroup = array();
+    $upgroup[] = $passed_person;
+    $ancestors = find_ancestors_for_group($upgroup);
+    foreach ($ancestors as $one)
+    {
+      $person = find_person($one);
+      $dotfilecontents =. "$one [label = \"".$person['fullname']."\" URL=\"mpact.php?op=show_tree&id=".$one."\"];\n";
+      $advisors = find_advisors_for_person($one);
+      foreach ($advisors as $adv)
+      {
+        $dotfilecontents =. "$adv -> $one;\n";
+      }
+    }
+    # descendents
+    $downgroup = array();
+    $downgroup[] = $passed_person;
+    $descendents = find_descendents_for_group($downgroup);
+    foreach ($descendents as $one)
+    {
+      $person = find_person($one);
+      $dotfilecontents =. "$one [label = \"".$person['fullname']."\" URL=\"mpact.php?op=show_tree&id=".$one."\"";
+      if ($one == $passed_person){
+        $dotfilecontents =. " color=\"red\" style=\"filled\" fillcolor=\"grey\"";
+      }
+      $dotfilecontents =. "];\n";
+      $advisees = find_advisorships_under_person($one);
+      foreach ($advisees as $adv)
+      {
+        $dotfilecontents =. "$one -> $adv;\n";
+      }
+    }
+    $dotfilecontents =. "}\n";
+
+    return $dotfilecontents;
+  }
+}
+
+# -------------------------------------------------------------------------------
 function draw_tree_dotgraph($passed_person)
 {
   $person = $passed_person;
