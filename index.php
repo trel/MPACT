@@ -19,7 +19,7 @@ MPACT database and develop new MPACT metrics and theory.</strong></p>
 <div id="board">
   <h1>Board of Advisors</h1>
     <ul>
-      <li><a href="http://www.slis.indiana.edu/faculty/#Sugimoto">Cassidy Sugimoto</a>, Director</li>
+      <li><a href="http://ella.slis.indiana.edu/~sugimoto/">Cassidy Sugimoto</a>, Director</li>
       <li><a href="http://www.terrellrussell.com">Terrell Russell</a></li>
       <li><a href="http://ils.unc.edu/~march/">Gary Marchionini</a></li>
     </ul>
