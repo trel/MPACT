@@ -198,10 +198,7 @@ if (is_admin()){
   echo $_SESSION['MPACT']['fullname']." (".$_SESSION['MPACT']['username'].") - <a href=\"mpact.php?op=logout\">Logout</a>";
 }
 else{
-  $host_info = get_environment_info();
-  if ($host_info['hostname'] != "sils"){
-    echo "<a href=\"mpact.php?op=login\">Login</a>";
-  }
+  echo "<a href=\"mpact.php?op=login\">Login</a>";
 }
 echo "</p></div>";
 echo "<div class=\"clear\"></div>";
@@ -2390,7 +2387,7 @@ function get_environment_info()
   $hostname = $_SERVER['SERVER_NAME'];
   if ($hostname == ""){$hostname = exec(hostname);}
 #  echo "hostname = [$hostname]<br />";
-  if ($hostname == "www.ibiblio.org")
+  if ($hostname == "www.ibiblio.org" || $hostname == "www-dev.ibiblio.org")
   {
     # the main install on ibiblio
     $host_info['hostname']    = "ibiblio";

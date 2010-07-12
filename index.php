@@ -2,6 +2,25 @@
 
 require 'envsetup.php';
 
+// Begin Session
+session_start();
+
+// Delete server session if client cookie doesn't exist
+if (!isset($_COOKIE['MPACT_userid'])){
+  unset($_SESSION['MPACT']);
+}
+
+// Check for good cookie (and expired session) - (re)set session values accordingly
+if (isset($_COOKIE['MPACT_userid']) && !isset($_SESSION['MPACT'])){
+  $query = "SELECT id, username, fullname FROM users WHERE id='".$_COOKIE['MPACT_userid']."'";
+  $result = mysql_query($query) or die(mysql_error());
+  $line = mysql_fetch_array($result);
+  $_SESSION['MPACT']['userid'] = $line['id'];
+  $_SESSION['MPACT']['username'] = $line['username'];
+  $_SESSION['MPACT']['fullname'] = $line['fullname'];
+}
+
+// Display header
 xhtml_web_header();
 
 ?>
