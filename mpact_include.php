@@ -2390,26 +2390,14 @@ function get_environment_info()
   $hostname = $_SERVER['SERVER_NAME'];
   if ($hostname == ""){$hostname = exec(hostname);}
 #  echo "hostname = [$hostname]<br />";
-  if ($hostname == "www.ils.unc.edu" || $hostname == "ils.unc.edu" || $hostname == "ruby.ils.unc.edu")
+  if ($hostname == "www.ibiblio.org")
   {
-    # live ils.unc.edu server
-    $host_info['hostname']    = "sils";
-    $host_info['ownername']   = "tgr";
-    $host_info['dotlocation'] = "/export/home/t/tgr/terrelllocal/usr/local/bin/dot";
-    $host_info['appdir']      = "/export/home/t/tgr/mpact";
-    $host_info['webdir']      = "http://www.ils.unc.edu/mpact";
-    $host_info['dotcachedir'] = "dotgraphs";
-    $host_info['dotfiletype'] = "gif";
-    $host_info['dotfontface'] = "cour";
-  }
-  else if ($hostname == "tribal" || $hostname == "www.ibiblio.orgd")
-  {
-    # army's install on ibiblio
+    # the main install on ibiblio
     $host_info['hostname']    = "ibiblio";
-    $host_info['ownername']   = "tgr";
-    $host_info['dotlocation'] = "/export/sunsite/users/tgr/terrelllocal/usr/local/bin/dot";
-    $host_info['appdir']      = "/export/sunsite/users/tgr/www/mpact";
-    $host_info['webdir']      = "http://www.ibiblio.org/tgr/mpact";
+    $host_info['ownername']   = "mpact";
+    $host_info['dotlocation'] = "/usr/bin/dot";
+    $host_info['appdir']      = "/public/html/mpact";
+    $host_info['webdir']      = "http://www.ibiblio.org/mpact";
     $host_info['dotcachedir'] = "dotgraphs";
     $host_info['dotfiletype'] = "png";
     $host_info['dotfontface'] = "cour";
@@ -2426,7 +2414,7 @@ function get_environment_info()
     $host_info['dotfiletype'] = "png";
     $host_info['dotfontface'] = "cour";
   }
-  else if ($hostname == "trelpancake.local")
+  else if ($hostname == "localhost.com")
   {
     # my laptop
     $host_info['hostname']    = "laptop";
@@ -2553,35 +2541,25 @@ function draw_tree_dotgraph($passed_person)
     $webcache = $host_info['webdir']."/".$host_info['dotcachedir'];
     $appfilename = "$appcache/$person.".$host_info['dotfiletype'];
     #echo "appfilename = $appfilename<br />";
+    $dotfilename = "$appcache/$person.dot";
+    #echo "dotfilename = $dotfilename<br />";
     $webfilename = "$webcache/$person.".$host_info['dotfiletype'];
     #echo "webfilename = $webfilename<br />";
     $appimagemap = "$appcache/$person.map";
     #echo "appimagemap = $appimagemap<br />";
 
     if (!file_exists($appfilename)) {
-      # make sure cachedir exists
-      if (!file_exists($appcache))
-      {
-        $mkdircmd = "mkdir -p $appcache";
-  #      echo "mkdircmd = $mkdircmd<br />";
-        exec($mkdircmd);
-        $chowncmd = "chown ".$host_info['ownername']." $appcache";
-    #    echo "chowncmd = $chowncmd<br />";
-    #    exec($chowncmd);
-  #      echo "cachedir - CREATED<br />";
-      }
-      else
-      {
-  #      echo "cachedir - ALREADY EXISTS<br />";
-      }
-      # retrieve dotfile and generate graph
-      $dotfileurl = $host_info['webdir']."/dotfile.php?id=$person";
-  #    echo "dotfileurl = $dotfileurl<br />";
-      $authforcurl = ($hostname == "www.ibiblio.org" ? "-u army:army" : "");
-      $getandgenerategraph = "curl -s $authforcurl \"$dotfileurl\" | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename";
-  #    echo "getandgenerategraph = $getandgenerategraph<br />";
+      # assumption is that the cachedir exists... (run setupmpact.sh)
+      # generate dotfile
+      $dotfilecontents = generate_dotfile($person);
+      $fh = fopen($dotfilename, 'w');
+      fwrite($fh, $dotfilecontents);
+      fclose($fh);
+      # generate graph
+        $getandgenerategraph = "/bin/cat $dotfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename 2>&1";
+#      echo "getandgenerategraph = $getandgenerategraph<br />";
       exec($getandgenerategraph);
-      $chowncmd = "chown ".$host_info['ownername']." $appfilename";
+  #    $chowncmd = "chown ".$host_info['ownername']." $appfilename";
   #    echo "chowncmd = $chowncmd<br />";
   #    exec($chowncmd);
   
