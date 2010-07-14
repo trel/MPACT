@@ -27,12 +27,16 @@ xhtml_web_header();
 
 <h1>The MPACT Project</h1>
 
-<p><strong>The MPACT Project is an ongoing project devoted to defining and assessing
-Mentoring as a scholarly activity. Based at the School of Information and Library
-Science's Interaction Design Laboratory at the University of North Carolina at
-Chapel Hill, the project's current focus is collecting data on dissertations and
-dissertation committee service.  We invite participation of others to augment the
-MPACT database and develop new MPACT metrics and theory.</strong></p>
+<p><strong>The MPACT Project is an academic genealogy project devoted to defining and
+assessing mentoring as a scholarly activity, examining the emergence and
+interaction of disciplines, and identifying patterns of knowledge diffusion.
+MPACT is a joint project between Indiana University Bloomington and
+the University of North Carolina at Chapel Hill.</strong></p>
+
+<p><strong>The current focus of the project is on collecting dissertation data
+from a wide variety of disciplines and institutions.  We invite the participation
+of others to augment and utilize the MPACT database to develop new metrics and theory,
+rooted in academic genealogy.</strong></p>
 
 
 <div id="board">
