@@ -97,11 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             echo "<p>Please login if you have an account.</p>\n";
             echo "<form id=\"loginform\" method=\"post\" action=\"".$_SERVER['SCRIPT_NAME']."\">\n";
             echo "<input type=\"hidden\" name=\"op\" value=\"login\">\n";
-            echo "<p>\n";
-            echo "Username: <input type='text' name='username' /><br />\n";
-            echo "Password: <input type='password' name='password' /><br />\n";
-            echo "<input type='submit' name='Submit' /><br />\n";
-            echo "</p>\n";
+            echo "<table border=\"0\">\n";
+            echo "<tr><td><p>Username:</p></td><td><input type='text' name='username' /></td></tr>\n";
+            echo "<tr><td><p>Password:</p></td><td><input type='password' name='password' /></td></tr>\n";
+            echo "<tr><td colspan=\"2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='submit' name='Submit' value='Login' /></td></tr>\n";
+            echo "</table>\n";
             echo "</form>";
           }
           else{

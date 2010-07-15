@@ -213,7 +213,7 @@ echo "
     </td>
     
     <td>
-      <span id=\"mpactlogo\"><a href=\"./\"><img src=\"./images/mpact-tassel.png\" width=\"350\"></a></span>
+      <span id=\"mpactlogo\"><a href=\"./\"><img src=\"./images/mpact-tassel.png\" width=\"470\"></a></span>
       <span class=\"navtextlinks\">
       <a href=\"publications.php\">Publications</a> &nbsp;&bull;&nbsp;
       <a href=\"mpact.php?op=statistics\">Project Statistics</a>
@@ -225,19 +225,19 @@ echo "
       </span>
       <form id=\"main_mpact\" method=\"post\" action=\"mpact.php\" class=\"inlinesearchbox\">
         <input type=\"hidden\" name=\"op\" value=\"search\">
-        <span class=\"navtext\">People Search:&nbsp;<input type=\"text\" name=\"q\" size=\"15\" value=\"".$_POST['q']."\"></span>
+        <span class=\"navtext\">People Search:&nbsp;<input type=\"text\" name=\"q\" size=\"13\" value=\"".$_POST['q']."\"></span>
       </form>
       &nbsp;&nbsp;&nbsp;
       <form id=\"main_mpact_title_abstract\" method=\"post\" action=\"mpact.php\" class=\"inlinesearchbox\">
         <input type=\"hidden\" name=\"op\" value=\"search_title_abstract\">
-        <span class=\"navtext\">Title/Abstract Search:&nbsp;<input type=\"text\" name=\"qta\" size=\"15\" value=\"".$_POST['qta']."\"></span>
+        <span class=\"navtext\">Title/Abstract Search:&nbsp;<input type=\"text\" name=\"qta\" size=\"13\" value=\"".$_POST['qta']."\"></span>
       </form>";
 if (is_admin()){
-  echo "<br /><form id=\"main_mpact_notes\" method=\"post\" action=\"mpact.php\" class=\"inlinesearchbox\">
+  echo "<br /><br /><span class=\"navtextlinks\"><a href=\"mpact.php?op=admin\">Administrator Pages</a></span>";
+  echo "<form id=\"main_mpact_notes\" method=\"post\" action=\"mpact.php\" class=\"inlinesearchbox\">
   <input type=\"hidden\" name=\"op\" value=\"search_notes\">
-  <span class=\"navtext centered\">Admin Notes Search:&nbsp;<input type=\"text\" name=\"qn\" size=\"15\" value=\"".$_POST['qn']."\"></span>
+  <span class=\"navtext centered\">Admin Notes Search:&nbsp;<input type=\"text\" name=\"qn\" size=\"13\" value=\"".$_POST['qn']."\"></span>
   </form>";
-  echo "<span class=\"navtextlinks\"><a href=\"mpact.php?op=admin\">Administrator Pages</a></span>";
 }
 echo "    </td>
 
