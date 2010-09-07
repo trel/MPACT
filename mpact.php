@@ -162,6 +162,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
           echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a></p>\n";
 
+          echo "<br />";
+
+          show_alphabet();
+
         }
         else
         {
