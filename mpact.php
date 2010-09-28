@@ -66,13 +66,13 @@ if (isset($_COOKIE['MPACT_userid']) && !isset($_SESSION['MPACT'])){
   $_SESSION['MPACT']['fullname'] = $line['fullname'];
 }
 
-// Display header
-xhtml_web_header();
-
 ###############################################
 // DISPLAY SOMETHING - something from the URL
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
+  // Display header
+  xhtml_web_header();
+
 //  echo "-----\n";
 //  print_r($_COOKIE);
 //  echo "-----\n";
@@ -2782,8 +2782,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   
       ###############################################
       default:
-        // display with no options...
-        action_box("Op default.");
+        // oops - not supposed to be here
+        action_box("invalid action",1);
     }
   }
   else
@@ -2907,6 +2907,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 // SOMETHING WAS SUBMITTED - through a form
 else
 {
+
+  if ($_POST['op'] != "login"){
+    // Display header
+    xhtml_web_header();
+  }
+
   switch ($_POST['op'])
   {
     ###############################################
@@ -2931,6 +2937,8 @@ else
           header("Location: ".$_SERVER['SCRIPT_NAME']);
         }
         else{
+          // Display header
+          xhtml_web_header();
           # incorrect credentials
           action_box("Please try again...",2,$_SERVER['SCRIPT_NAME']."?op=login");
         }
