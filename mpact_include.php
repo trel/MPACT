@@ -1141,7 +1141,7 @@ function find_all_people_for_selectbox($with_dissertation="0")
               ORDER BY n.lastname,n.firstname,n.middlename
             ";
   }
-  echo $query;
+  // echo $query;
   $result = mysql_query($query) or die(mysql_error());
 
   while ( $line = mysql_fetch_array($result)) {
