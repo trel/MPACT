@@ -476,7 +476,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<h3>Dissertations from the year 0000</h3>\n";
           
           $query = "SELECT
-                d.id, d.person_id, d.completedyear
+                d.id, d.person_id, d.school_id, d.completedyear
                 FROM
                   dissertations d
                 WHERE
@@ -492,11 +492,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           foreach ($dissertations as $d)
           {
+            $zerocount++;
+            $query = "SELECT fullname
+                        FROM
+                          schools
+                        WHERE id = '".$d['school_id']."'
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $schoolname = $line['fullname'];
+            }
+            echo "$zerocount. ";
             echo get_person_link($d['person_id']);
             print ", person id = ".$d['person_id'];
+            print ", $schoolname";
             print "<br />";
-            print "<br />";
-            $zerocount++;
           }
           if ($zerocount == 0)
           {
