@@ -1266,7 +1266,7 @@ function find_person($person_id)
 {
   $query = "SELECT
         n.firstname, n.middlename,
-        n.lastname, n.suffix,
+        n.lastname, n.suffix, p.degree,
         p.id, p.preferred_name_id
         FROM
           names n, people p
@@ -2624,7 +2624,7 @@ function draw_tree($passed_person)
 
           $query = "SELECT
                 n.firstname, n.middlename,
-                n.lastname, n.suffix
+                n.lastname, n.suffix, p.degree
                 FROM
                   names n, people p
                 WHERE
@@ -2638,6 +2638,7 @@ function draw_tree($passed_person)
             $thisperson['middlename'] = $line['middlename'];
             $thisperson['lastname']   = $line['lastname'];
             $thisperson['suffix']     = $line['suffix'];
+            $thisperson['degree']     = $line['degree'];
             $personcount++;
           }
 
@@ -2737,6 +2738,17 @@ function draw_tree($passed_person)
               }
               $printme .= "<br />";
               $aliases++;
+            }
+            $printme .=  "</p>";
+            echo $printme;
+
+            # Degree
+            $printme = "<p>\n";
+            $printme .= "DEGREE:<br />\n";
+            $printme .= " - ".$thisperson['degree'];
+            if (is_admin())
+            {
+              $printme .= " (<a href=\"".$_SERVER['SCRIPT_NAME']."?op=edit_degree&id=$passed_person\">Edit</a>)";
             }
             $printme .=  "</p>";
             echo $printme;

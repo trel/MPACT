@@ -48,6 +48,24 @@ $inspectioncodes = array(
   "1" => "Yes"
 );
 
+$degree_types = array(
+  "Unknown",
+  "Unknown - Investigated",
+  "B.A.",
+  "B.S.",
+  "M.A.",
+  "M.S.",
+  "M.F.A.",
+  "M.L.S.",
+  "D.S.W.",
+  "D.Lib.",
+  "Ed.D.",
+  "Pharm.D.",
+  "J.D.",
+  "M.D.",
+  "Ph.D."
+);
+
 // Begin Session
 session_start();
 
@@ -1476,7 +1494,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<input type=\"hidden\" name=\"op\" value=\"create_person\">\n";
 
           echo "<table border=1>";
-          echo "<tr><td>First</td><td>Middle</td><td>Last</td><td>Suffix</td></tr>";
+          echo "<tr><td>First</td><td>Middle</td><td>Last</td><td>Suffix</td><td>Degree</td></tr>";
 
 
           echo "<tr>";
@@ -1484,6 +1502,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<td><input type=\"text\" size=\"10\" name=\"middlename\"></td>";
           echo "<td><input type=\"text\" size=\"12\" name=\"lastname\"></td>";
           echo "<td><input type=\"text\" size=\"5\" name=\"suffix\"></td>";
+          echo "<td>";
+          echo "<select name=\"degree\">\n";
+          foreach ($degree_types as $one){
+            echo "<option value=\"$one\"";
+            echo ">$one</option>\n";
+          }
+          echo "</select>\n";
+          echo "</td>";
           echo "</tr>";
 
           echo "</table>";
@@ -1756,6 +1782,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         break;
 
+      ###############################################
+      case "edit_degree":
+
+        if (is_admin())
+        {
+          if (!$_GET['id']){action_box("No ID given.");}
+          else
+          {
+
+            $person = find_person($_GET['id']);
+
+            echo "<h3>Editing a Degree</h3>";
+            echo "<p>";
+
+            echo "<form id=\"main_mpact\" method=\"post\" action=\"".$_SERVER['SCRIPT_NAME']."\">";
+            echo "<input type=\"hidden\" name=\"op\" value=\"edit_degree\">";
+            echo "<input type=\"hidden\" name=\"id\" value=\"".$_GET['id']."\">";
+
+
+            echo "<table border=1>";
+            echo "<tr><td>Name</td><td>Degree</td></tr>";
+
+
+            echo "<tr>";
+            echo "<td>".$person['fullname']."</td>";
+            echo "<td>";
+            echo "<select name=\"degree\">\n";
+            foreach ($degree_types as $one){
+              echo "<option value=\"$one\"";
+              if ($person['degree'] == $one){
+                echo " selected";
+              }
+              echo ">$one</option>\n";
+            }
+            echo "</select>\n";
+            echo "</td>";
+            echo "</tr>";
+
+            echo "</table>";
+
+            echo "<input type=\"submit\" name=\"submit\" value=\"Save\">";
+
+            echo "</form>";
+
+            echo "</p>";
+
+
+            echo "<table border=\"0\"><tr><td>";
+            draw_tree($_GET['id']);
+            echo "</td></tr></table>";
+
+
+
+          }
+        }
+        else
+        {
+           not_admin();
+        }
+
+        break;
+
 
       ###############################################
       case "add_name":
@@ -1896,6 +1984,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 echo get_person_link($person['id']);
                 echo "<br />";
 
+                echo "Degree: <select name=\"degree\">\n";
+                foreach ($degree_types as $one)
+                {
+                  echo "<option value=\"$one\"";
+                  if ($one == "Ph.D."){
+                    echo " selected";
+                  }
+                  echo ">$one</option>\n";
+                }
+                echo "</select>\n";
+                echo "<br />";
+
                 echo "Status: <select name=\"status\">\n";
                 foreach (range(0,4) as $one)
                 {
@@ -1980,6 +2080,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 echo get_person_link($person['id']);
                 echo "<br />";
               
+                echo "Degree: <select name=\"degree\">\n";
+                foreach ($degree_types as $one)
+                {
+                  echo "<option value=\"$one\"";
+                  if ($person['degree'] == $one)
+                  {
+                    echo " selected";
+                  }
+                  echo ">$one</option>\n";
+                }
+                echo "</select>\n";
+                echo "<br />";
+
                 echo "Status: <select name=\"status\">\n";
                 foreach (range(0,4) as $one)
                 {
@@ -3399,7 +3512,8 @@ else
           # Create Person with new_name_id
           $query = "INSERT people
                 SET
-                  preferred_name_id = '".$new_name_id."'
+                  preferred_name_id = '".$new_name_id."',
+                  degree = '".$_POST['degree']."'
               ";
           $result = mysql_query($query) or die(mysql_error());
 
@@ -3687,6 +3801,36 @@ else
       break;
 
     ###############################################
+    case "edit_degree":
+
+      if (is_admin()){
+
+        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+
+        $person = find_person(intval($_POST['id']));
+
+        $query = "UPDATE people
+              SET
+                degree         = '".$_POST['degree']."'
+              WHERE
+                id = '".$_POST['id']."'
+            ";
+
+        $result = mysql_query($query) or die(mysql_error());
+
+        action_box("Degree Edited",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$person['id']);
+        # log it
+        mpact_logger("edited degree[".$_POST['degree']."] for person[".$person['id']."] (".$person['fullname'].")");
+
+      }
+      else
+      {
+         not_admin();
+      }
+
+      break;
+
+    ###############################################
     case "create_dissertation":
 
       if (is_admin()){
@@ -3707,6 +3851,13 @@ else
                 title               = '".$_POST['title']."',
                 abstract            = '".$_POST['abstract']."'
             ";
+
+        $result = mysql_query($query) or die(mysql_error());
+
+        $query = "UPDATE people
+                  SET degree = '".$_POST['degree']."'
+                  WHERE
+                    id = '".$_POST['person_id']."'";
 
         $result = mysql_query($query) or die(mysql_error());
 
@@ -3752,10 +3903,22 @@ else
 
         $result = mysql_query($query) or die(mysql_error());
 
+        $query = "UPDATE people
+                  SET degree = '".$_POST['degree']."'
+                  WHERE
+                    id = '".$_POST['person_id']."'";
+
+        $result = mysql_query($query) or die(mysql_error());
+
         action_box("Dissertation Saved",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']);
         # log it
         mpact_logger("edit dissertation[".$_POST['id']."] (".$person['fullname'].") from school[".$dissertation['school_id']."] (".$schools[$dissertation['school_id']].") in year(".$dissertation['completedyear'].") to school[".$_POST['school_id']."] (".$schools[$_POST['school_id']].") in year(".$_POST['completedyear'].")");
         # look for changes
+          # degree
+          if ($person['degree'] != $_POST['degree'])
+          {
+            mpact_logger($dissertation['id']." updated degree [".$_POST['degree']."]","dissertation");
+          }
           # discipline
           if ($dissertation['discipline_id'] != $_POST['discipline_id'])
           {
