@@ -156,29 +156,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         {
           echo "<h3>Administrator Pages</h3>\n";
 
+          echo "<table border='0' width='90%'>\n";
+          echo "<tr><td>\n";
+
           echo "<p>\n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_logs\">Show Logs</a> - \n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_orphans\">Show Orphans</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_logs\">Show Logs</a>\n";
+          echo "</p>\n";
+
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_orphans\">Show Orphans</a>\n";
+          echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=citation_correlation\">Citation Correlation</a>\n";
           echo "</p>\n";
+
           echo "<p>\n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">LIS, Graduates By Year</a> - \n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profswithoutdiss\">LIS Professors without Dissertations</a> - \n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profsnotfromlis\">LIS Professors without LIS Dissertations</a> - \n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_history\">LIS History</a>\n";
-          echo "</p>\n";
-          echo "<p>\n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_multi_dissertations\">People with Multiple Dissertations (Errors in DB)</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_multi_dissertations\">People with Multiple Dissertations (Errors in DB)</a>\n";
+          echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_zero_year\">Year 0000</a>\n";
           echo "</p>\n";
+
           echo "<p>\n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract\">No Title/Abstract</a> - \n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract_lis\">LIS, No Title/Abstract</a> - \n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_lis\">LIS, No Title</a> - \n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a>\n";
+          echo "</p>\n";
+
+          echo "</td><td>\n";
+
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract\">No Title/Abstract</a>\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_abstract_lis\">LIS, No Title/Abstract</a>\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_lis\">LIS, No Title</a>\n";
+          echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abtract</a>\n";
           echo "</p>\n";
 
-          echo "<p><a href=\"".$_SERVER['SCRIPT_NAME']."?op=create_person\">Add a New Person to the Database</a></p>\n";
+          echo "</td><td>\n";
+
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">LIS, Graduates By Year</a>\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_history\">LIS History</a>\n";
+          echo "</p>\n";
+
+          echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknown_degree\">LIS Professors with Unknown Degree</a>\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknowninvestigated_degree\">LIS Professors with Unknown-Investigated Degree</a>\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profswithoutdiss\">LIS Professors without Dissertations</a>\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profsnotfromlis\">LIS Professors without LIS Dissertations</a>\n";
+          echo "</p>\n";
+
+          echo "</td></tr>\n";
+          echo "</table>\n";
 
           echo "<br />";
 
@@ -412,6 +444,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $multicount = 0;
+          echo "<p>\n";
           foreach ($dissertations as $d)
           {
             if ($d['howmany'] > 1)
@@ -426,6 +459,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           {
             print " - None - database is clear.";
           }
+          echo "</p>\n";
         }
         else
         {
@@ -455,6 +489,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $zerocount = 0;
+          echo "<p>\n";
           foreach ($dissertations as $d)
           {
             echo get_person_link($d['person_id']);
@@ -467,6 +502,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           {
             print " - None - database is clear.";
           }
+          echo "</p>\n";
         }
         else
         {
@@ -499,6 +535,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $zerocount = 0;
+          echo "<p>\n";
           foreach ($dissertations as $d)
           {
             $zerocount++;
@@ -513,6 +550,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           {
             print " - None - All LIS dissertations have titles.";
           }
+          echo "</p>\n";
         }
         else
         {
@@ -545,6 +583,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $zerocount = 0;
+          echo "<p>\n";
           foreach ($dissertations as $d)
           {
             $zerocount++;
@@ -559,6 +598,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           {
             print " - None - All LIS dissertations have abstracts.";
           }
+          echo "</p>\n";
         }
         else
         {
@@ -590,6 +630,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $zerocount = 0;
+          echo "<p>\n";
           foreach ($dissertations as $d)
           {
             $zerocount++;
@@ -604,6 +645,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           {
             print " - None - All dissertations have titles and abstracts.";
           }
+          echo "</p>\n";
         }
         else
         {
@@ -636,6 +678,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $zerocount = 0;
+          echo "<p>\n";
           foreach ($dissertations as $d)
           {
             $zerocount++;
@@ -650,6 +693,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           {
             print " - None - All LIS dissertations have titles and abstracts.";
           }
+          echo "</p>\n";
         }
         else
         {
@@ -657,6 +701,187 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         }
 
         break;
+
+        ###############################################
+        case "lis_profs_unknown_degree":
+      
+        if (is_admin())
+        {
+          echo "<h3>LIS Professors with Unknown Degree</h3>\n";
+      
+          # advisors or committee members with unknown degree,
+          # that served on an lis dissertation
+
+          # get list of LIS dissertations
+          $query = "SELECT
+                    d.id
+                  FROM
+                    dissertations d
+                  WHERE
+                    d.discipline_id = '1'
+                  ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $lis_dissertations[] = $line['id'];
+          }
+
+          # get advisors for each diss, check for advisor's degree
+          # if unknown degree, save
+          foreach ($lis_dissertations as $id){
+            $advisors = array();
+            $query = "SELECT person_id
+                        FROM advisorships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $advisors[] = $line['person_id'];
+            }
+            foreach($advisors as $aid){
+              $adv = find_person($aid);
+              if ($adv['degree'] == "Unknown"){
+                $lis_with_unknown[] = $aid;
+              }
+            }
+          }
+
+          # get committeeships for each diss, check for comm's degree
+          # if unknown degree, save
+          foreach ($lis_dissertations as $id){
+            $committeemembers = array();
+            $query = "SELECT person_id
+                        FROM committeeships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $committeemembers[] = $line['person_id'];
+            }
+            foreach($committeemembers as $cid){
+              $com = find_person($cid);
+              if ($com['degree'] == "Unknown"){
+                $lis_with_unknown[] = $cid;
+              }
+            }
+          }
+
+          # uniquify
+          $lis_with_unknown = array_unique($lis_with_unknown);
+
+          # print them out
+          echo "<p>\n";
+          $count = 0;
+          foreach($lis_with_unknown as $pid){
+            $count++;
+            $person = find_person($pid);
+            print "$count. ";
+            print get_person_link($pid);
+            print "<br />\n";
+          }
+          if ($count == 0)
+          {
+            print " - None";
+          }
+          echo "</p>\n";
+
+        }
+        else
+        {
+          not_admin();
+        }
+
+        break;
+
+        ###############################################
+        case "lis_profs_unknowninvestigated_degree":
+      
+        if (is_admin())
+        {
+          echo "<h3>LIS Professors with Unknown-Investigated Degree</h3>\n";
+      
+          # advisors or committee members with unknown-investigated degree,
+          # that served on an lis dissertation
+
+          # get list of LIS dissertations
+          $query = "SELECT
+                    d.id
+                  FROM
+                    dissertations d
+                  WHERE
+                    d.discipline_id = '1'
+                  ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $lis_dissertations[] = $line['id'];
+          }
+
+          # get advisors for each diss, check for advisor's degree
+          # if unknown degree, save
+          foreach ($lis_dissertations as $id){
+            $advisors = array();
+            $query = "SELECT person_id
+                        FROM advisorships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $advisors[] = $line['person_id'];
+            }
+            foreach($advisors as $aid){
+              $adv = find_person($aid);
+              if ($adv['degree'] == "Unknown - Investigated"){
+                $lis_with_unknown[] = $aid;
+              }
+            }
+          }
+
+          # get committeeships for each diss, check for comm's degree
+          # if unknown degree, save
+          foreach ($lis_dissertations as $id){
+            $committeemembers = array();
+            $query = "SELECT person_id
+                        FROM committeeships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $committeemembers[] = $line['person_id'];
+            }
+            foreach($committeemembers as $cid){
+              $com = find_person($cid);
+              if ($com['degree'] == "Unknown - Investigated"){
+                $lis_with_unknown[] = $cid;
+              }
+            }
+          }
+
+          # uniquify
+          $lis_with_unknown = array_unique($lis_with_unknown);
+
+          # print them out
+          echo "<p>\n";
+          $count = 0;
+          foreach($lis_with_unknown as $pid){
+            $count++;
+            $person = find_person($pid);
+            print "$count. ";
+            print get_person_link($pid);
+            print "<br />\n";
+          }
+          if ($count == 0)
+          {
+            print " - None";
+          }
+          echo "</p>\n";
+
+        }
+        else
+        {
+          not_admin();
+        }
+
+        break;
+
 
         ###############################################
         case "lis_profswithoutdiss":
@@ -735,6 +960,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           $without_diss = array_unique($without_diss);
 
           # print them out
+          echo "<p>\n";
           $count = 0;
           foreach($without_diss as $pid){
             $count++;
@@ -743,6 +969,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             print get_person_link($pid);
             print "<br />\n";
           }
+          if ($count == 0)
+          {
+            print " - None";
+          }
+          echo "</p>\n";
 
         }
         else
@@ -833,6 +1064,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $without_diss = array_unique($without_diss);
 
             # print them out
+            echo "<p>\n";
             $count = 0;
             foreach($without_diss as $pid){
               $count++;
@@ -841,6 +1073,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               print get_person_link($pid);
               print "<br />\n";
             }
+            if ($count == 0)
+            {
+              print " - None";
+            }
+            echo "</p>\n";
 
           }
           else
