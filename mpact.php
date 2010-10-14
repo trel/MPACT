@@ -3633,6 +3633,8 @@ else
       if (is_admin()){
         if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
 
+        $_POST = array_map('trim',$_POST);
+
         if ($_POST['fullname'] == "" || $_POST['country'] == "")
         {
           action_box("Need to have at least a School name and Country.",3,$_SERVER['SCRIPT_NAME']."?op=create_school");
