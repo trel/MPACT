@@ -1843,6 +1843,8 @@ function find_advisorships_under_person($person_id)
         WHERE
           a.person_id = ".$person_id." AND
           a.dissertation_id = d.id
+        ORDER BY
+          d.completedyear ASC
       ";
 
   $result = mysql_query($query) or die(mysql_error());
