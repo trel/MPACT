@@ -64,6 +64,7 @@ $degree_types = array(
   "Ed.D.",
   "Th.D.",
   "Pharm.D.",
+  "D.Sc.",
   "J.D.",
   "M.D.",
   "Ph.D."
