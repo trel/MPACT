@@ -1103,6 +1103,146 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         break;
 
         ###############################################
+        case "lis_profs_summary":
+        
+        if (is_admin())
+        {
+          echo "<h3>LIS Professors Summary</h3>\n";
+        
+          # advisors or committee members
+          # that served on an lis dissertation
+
+          echo "<table border=1 width=500>\n";
+
+          # get list of LIS dissertations
+          $query = "SELECT
+                    d.id
+                  FROM
+                    dissertations d
+                  WHERE
+                    d.discipline_id = '1'
+                  ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $lis_dissertations[] = $line['id'];
+          }
+          echo "<tr><td>Total LIS Dissertations</td><td>".count($lis_dissertations)."</td></tr>\n";
+          
+          # get advisors for each diss
+          $advisors = array();
+          foreach ($lis_dissertations as $id){
+            $query = "SELECT person_id
+                        FROM advisorships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $advisors[] = $line['person_id'];
+            }
+          }
+          echo "<tr><td>Total LIS Dissertation Advisorships</td><td>";
+          echo count($advisors);
+          echo "</td></tr>\n";
+
+          # get committeeships for each diss
+          $committeemembers = array();
+          foreach ($lis_dissertations as $id){
+            $query = "SELECT person_id
+                        FROM committeeships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $committeemembers[] = $line['person_id'];
+            }
+          }
+          echo "<tr><td>Total LIS Dissertation Committeeships</td><td>";
+          echo count($committeemembers);
+          echo "</td></tr>\n";
+
+          $total = array_merge($advisors,$committeemembers);
+          echo "<tr><td>Total LIS Dissertation Advisorships and Committeeships:</td><td>";
+          echo count($total);
+          echo "</td></tr>\n";
+
+          $unique = array_unique($total);
+          echo "<tr><td>Total number of unique advisor/committee members on LIS dissertations:</td><td>";
+          echo count($unique);
+          echo "</td></tr>\n";
+
+          $unique_list = implode(",",$unique);
+          $query = "SELECT count(*) as howmany
+                      FROM dissertations
+                      WHERE
+                        person_id IN ($unique_list)
+                    ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $known = $line['howmany'];
+          }
+          echo "<tr><td>Subset of ".count($unique)." without a listed dissertation:</td><td>";
+          echo count($unique) - $known;
+          echo "</td></tr>\n";
+          echo "<tr><td>Subset of ".count($unique)." with a listed dissertation:</td><td>";
+          echo $known;
+          echo "</td></tr>\n";
+
+          $query = "SELECT count(*) as howmany
+                      FROM dissertations
+                      WHERE
+                        person_id IN ($unique_list)
+                        AND
+                        discipline_id != 16
+                    ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $howmany = $line['howmany'];
+          }
+          echo "<tr><td> - Subset of $known with known discipline:</td><td>";
+          echo $howmany;
+          echo "</td></tr>\n";
+
+          $query = "SELECT count(*) as howmany
+                      FROM dissertations
+                      WHERE
+                        person_id IN ($unique_list)
+                        AND
+                        completedyear != 0000
+                    ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $howmany = $line['howmany'];
+          }
+          echo "<tr><td> - Subset of $known with known year:</td><td>";
+          echo $howmany;
+          echo "</td></tr>\n";
+
+          $query = "SELECT count(*) as howmany
+                      FROM dissertations
+                      WHERE
+                        person_id IN ($unique_list)
+                        AND
+                        completedyear != 107
+                    ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $howmany = $line['howmany'];
+          }
+          echo "<tr><td> - Subset of $known with known school:</td><td>";
+          echo $howmany;
+          echo "</td></tr>\n";
+
+          echo "</table>\n";
+
+        }
+        else
+        {
+          not_admin();
+        }
+
+        break;
+
+        ###############################################
         case "lis_allyears":
 
           if (is_admin())
