@@ -205,6 +205,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "</p>\n";
 
           echo "<p>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_summary\">LIS Professors Summary</a>\n";
+          echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknown_degree\">LIS Professors with Unknown Degree</a>\n";
           echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknowninvestigated_degree\">LIS Professors with Unknown-Investigated Degree</a>\n";
@@ -900,7 +902,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         ###############################################
         case "lis_profswithoutdiss":
-        
+
         if (is_admin())
         {
           echo "<h3>LIS Professors without Dissertations</h3>\n";
@@ -920,11 +922,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           while ( $line = mysql_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
-
-          # get advisors for each diss, check for advisor's diss
-          # if no diss, save
+          # get advisors for each diss
+          $advisors = array();
           foreach ($lis_dissertations as $id){
-            $advisors = array();
             $query = "SELECT person_id
                         FROM advisorships
                         WHERE dissertation_id = $id
@@ -933,23 +933,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             while ( $line = mysql_fetch_array($result)) {
               $advisors[] = $line['person_id'];
             }
-            foreach($advisors as $aid){
-              $query = "SELECT id
-                          FROM dissertations
-                          WHERE person_id = $aid
-                        ";
-              $result = mysql_query($query) or die(mysql_error());
-              $line = mysql_fetch_array($result);
-              if (!isset($line['id'])){
-                $without_diss[] = $aid;
-              }
-            }
           }
-
-          # get committeeships for each diss, check for comm's diss
-          # if no diss, save
+          # get committeeships for each diss
+          $committeemembers = array();
           foreach ($lis_dissertations as $id){
-            $committeemembers = array();
             $query = "SELECT person_id
                         FROM committeeships
                         WHERE dissertation_id = $id
@@ -958,28 +945,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             while ( $line = mysql_fetch_array($result)) {
               $committeemembers[] = $line['person_id'];
             }
-            foreach($committeemembers as $cid){
-              $query = "SELECT id
-                          FROM dissertations
-                          WHERE person_id = $cid
-                        ";
-              $result = mysql_query($query) or die(mysql_error());
-              $line = mysql_fetch_array($result);
-              if (!isset($line['id'])){
-                $without_diss[] = $cid;
-              }
-            }
           }
+          $total = array_merge($advisors,$committeemembers);
+          $unique = array_unique($total);
 
-          # uniquify
-          $without_diss = array_unique($without_diss);
+          $unique_list = implode(",",$unique);
+          $listed = array();
+          $query = "SELECT person_id
+                      FROM dissertations
+                      WHERE
+                        person_id IN ($unique_list)
+                    ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $listed[] = $line['person_id'];
+          }
+          $notlisted = array_diff($unique,$listed);
 
           # print them out
           echo "<p>\n";
           $count = 0;
-          foreach($without_diss as $pid){
+          foreach($notlisted as $pid){
             $count++;
-            $person = find_person($pid);
             print "$count. ";
             print get_person_link($pid);
             print "<br />\n";
@@ -1112,7 +1099,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           # advisors or committee members
           # that served on an lis dissertation
 
-          echo "<table border=1 width=500>\n";
+          echo "<table border=1>\n";
 
           # get list of LIS dissertations
           $query = "SELECT
@@ -1171,20 +1158,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "</td></tr>\n";
 
           $unique_list = implode(",",$unique);
-          $query = "SELECT count(*) as howmany
+          $known = array();
+          $query = "SELECT person_id
                       FROM dissertations
                       WHERE
                         person_id IN ($unique_list)
                     ";
           $result = mysql_query($query) or die(mysql_error());
           while ( $line = mysql_fetch_array($result)) {
-            $known = $line['howmany'];
+            $known[] = $line['person_id'];
           }
-          echo "<tr><td>Subset of ".count($unique)." without a listed dissertation:</td><td>";
-          echo count($unique) - $known;
+          echo "<tr><td>";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profswithoutdiss\">Subset of ".count($unique)." without a listed dissertation</a>:</td><td>";
+          echo count(array_diff($unique,$known));
           echo "</td></tr>\n";
           echo "<tr><td>Subset of ".count($unique)." with a listed dissertation:</td><td>";
-          echo $known;
+          echo count($known);
           echo "</td></tr>\n";
 
           $query = "SELECT count(*) as howmany
@@ -1198,7 +1187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           while ( $line = mysql_fetch_array($result)) {
             $howmany = $line['howmany'];
           }
-          echo "<tr><td> - Subset of $known with known discipline:</td><td>";
+          echo "<tr><td> - Subset of ".count($known)." with known discipline:</td><td>";
           echo $howmany;
           echo "</td></tr>\n";
 
@@ -1213,7 +1202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           while ( $line = mysql_fetch_array($result)) {
             $howmany = $line['howmany'];
           }
-          echo "<tr><td> - Subset of $known with known year:</td><td>";
+          echo "<tr><td> - Subset of ".count($known)." with known year:</td><td>";
           echo $howmany;
           echo "</td></tr>\n";
 
@@ -1228,7 +1217,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           while ( $line = mysql_fetch_array($result)) {
             $howmany = $line['howmany'];
           }
-          echo "<tr><td> - Subset of $known with known school:</td><td>";
+          echo "<tr><td> - Subset of ".count($known)." with known school:</td><td>";
           echo $howmany;
           echo "</td></tr>\n";
 
