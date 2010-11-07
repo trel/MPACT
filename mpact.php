@@ -1009,11 +1009,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             while ( $line = mysql_fetch_array($result)) {
               $lis_dissertations[] = $line['id'];
             }
-
-            # get advisors for each diss, check for advisor's diss
-            # if no LIS diss, save
+            # get advisors for each diss
+            $advisors = array();
             foreach ($lis_dissertations as $id){
-              $advisors = array();
               $query = "SELECT person_id
                           FROM advisorships
                           WHERE dissertation_id = $id
@@ -1022,24 +1020,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               while ( $line = mysql_fetch_array($result)) {
                 $advisors[] = $line['person_id'];
               }
-              foreach($advisors as $aid){
-                $query = "SELECT id
-                            FROM dissertations
-                            WHERE person_id = $aid AND
-                               discipline_id = '1'
-                          ";
-                $result = mysql_query($query) or die(mysql_error());
-                $line = mysql_fetch_array($result);
-                if (!isset($line['id'])){
-                  $without_diss[] = $aid;
-                }
-              }
             }
-
-            # get committeeships for each diss, check for comm's diss
-            # if no LIS diss, save
+            # get committeeships for each diss
+            $committeemembers = array();
             foreach ($lis_dissertations as $id){
-              $committeemembers = array();
               $query = "SELECT person_id
                           FROM committeeships
                           WHERE dissertation_id = $id
@@ -1048,29 +1032,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               while ( $line = mysql_fetch_array($result)) {
                 $committeemembers[] = $line['person_id'];
               }
-              foreach($committeemembers as $cid){
-                $query = "SELECT id
-                            FROM dissertations
-                            WHERE person_id = $cid AND
-                               discipline_id = '1'
-                          ";
-                $result = mysql_query($query) or die(mysql_error());
-                $line = mysql_fetch_array($result);
-                if (!isset($line['id'])){
-                  $without_diss[] = $cid;
-                }
-              }
             }
+            $total = array_merge($advisors,$committeemembers);
+            $unique = array_unique($total);
 
-            # uniquify
-            $without_diss = array_unique($without_diss);
+            $unique_list = implode(",",$unique);
+            $listed = array();
+            $query = "SELECT person_id
+                        FROM dissertations
+                        WHERE
+                          person_id IN ($unique_list)
+                          AND
+                          discipline_id = '1'
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $listed[] = $line['person_id'];
+            }
+            $notlisted = array_diff($unique,$listed);
 
             # print them out
             echo "<p>\n";
             $count = 0;
-            foreach($without_diss as $pid){
+            foreach($notlisted as $pid){
               $count++;
-              $person = find_person($pid);
               print "$count. ";
               print get_person_link($pid);
               print "<br />\n";
