@@ -53,6 +53,7 @@ $degree_types = array(
   "Unknown - Investigated",
   "B.A.",
   "B.S.",
+  "B.L.S.",
   "L.L.B.",
   "M.A.",
   "M.S.",
