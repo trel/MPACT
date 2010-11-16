@@ -813,6 +813,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         break;
 
         ###############################################
+        case "lis_profs_unknowninvestigated":
         case "lis_profs_unknowninvestigated_degree":
       
 #        if (is_admin())
