@@ -743,6 +743,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $lis_dissertations[] = $line['id'];
           }
 
+          $lis_with_unknown = array();
+
           # get advisors for each diss, check for advisor's degree
           # if unknown degree, save
           foreach ($lis_dissertations as $id){
