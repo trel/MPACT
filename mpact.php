@@ -815,8 +815,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         ###############################################
         case "lis_profs_unknowninvestigated_degree":
       
-        if (is_admin())
-        {
+#        if (is_admin())
+#        {
           echo "<h3>LIS Professors with Unknown-Investigated Degree</h3>\n";
       
           # advisors or committee members with unknown-investigated degree,
@@ -896,11 +896,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           }
           echo "</p>\n";
 
-        }
-        else
-        {
-          not_admin();
-        }
+#        }
+#        else
+#        {
+#          not_admin();
+#        }
 
         break;
 
