@@ -484,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<h3>Dissertations from the year 0000</h3>\n";
           
           $query = "SELECT
-                d.id, d.person_id, d.school_id, d.completedyear
+                d.id, d.person_id, d.school_id, d.discipline_id, d.completedyear
                 FROM
                   dissertations d
                 WHERE
@@ -497,10 +497,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $dissertations[] = $line;
           }
           $zerocount = 0;
-          echo "<p>\n";
+          echo "<table>";
           foreach ($dissertations as $d)
           {
             $zerocount++;
+            # get school
             $query = "SELECT fullname
                         FROM
                           schools
@@ -510,17 +511,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             while ( $line = mysql_fetch_array($result)) {
               $schoolname = $line['fullname'];
             }
-            echo "$zerocount. ";
-            echo get_person_link($d['person_id']);
-            print ", person id = ".$d['person_id'];
-            print ", $schoolname";
-            print "<br />";
+            # get degree
+            $query = "SELECT degree
+                        FROM
+                          people
+                        WHERE id = '".$d['person_id']."'
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $degree = $line['degree'];
+            }
+            $discipline = find_discipline($d['discipline_id']);
+            echo "<tr>";
+            echo "<td>$zerocount.</td>";
+            echo "<td>".get_person_link($d['person_id'])."</td>";
+            print "<td>$degree</td>";
+            print "<td>".$discipline['title']."</td>";
+            print "<td>$schoolname</td>";
+            print "</tr>";
           }
           if ($zerocount == 0)
           {
-            print " - None - database is clear.";
+            print "<tr><td>None - database is clear.</td></tr>";
           }
-          echo "</p>\n";
+          echo "</table>\n";
         }
         else
         {
