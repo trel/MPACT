@@ -1760,7 +1760,7 @@ function mpact_scores($passed_person)
   $mpact['T'] = $t_score;
   $scores_output .= "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=glossary\" title=\"".$glossaryterms['defs'][$glossaryterms['ids']['T']]."\">T</a> = $t_score<br />\n";
   $mpact['G'] = $g_score;
-  $scores_output .= "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=glossary\" title=\"".$glossaryterms['defs'][$glossaryterms['ids']['A+C']]."\">G</a> = $g_score<br />\n";
+  $scores_output .= "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=glossary\" title=\"".$glossaryterms['defs'][$glossaryterms['ids']['G']]."\">G</a> = $g_score<br />\n";
   $mpact['W'] = $w_score;
   $scores_output .= "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=glossary\" title=\"".$glossaryterms['defs'][$glossaryterms['ids']['W']]."\">W</a> = $w_score<br />\n";
   $mpact['TD'] = $td_score;
