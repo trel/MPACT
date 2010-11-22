@@ -1032,7 +1032,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           # big loop
           print "<pre style=\"background-color:#ddd\">\n";
           print "<br />";
-          print "Count,DissID,DissYear,DissLastName,DissFirstName,DissSchool,DissCountry,AdvisorType,AdvisorLastName,AdvisorFirstName,";
+          print "Count,DissID,DissYear,DissLastName,DissFirstName,DissSchool,DissCountry,AdvisorID,AdvisorType,AdvisorLastName,AdvisorFirstName,";
           print "AdvisorDegree,AdvisorYear,AdvisorDiscipline,AdvisorSchool,AdvisorCountry\n";
           $count = 0;
           foreach($lis_dissertations as $did){
@@ -1064,10 +1064,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 print "\"".$school['fullname']."\",";
                 # DissCountry
                 print "\"".$school['country']."\",";
+                # AdvisorID
+                $pid = $line['person_id'];
+                print "\"$pid\",";
                 # AdvisorType
                 print "\"Advisor\",";
                 # AdvisorLastName
-                $pid = $line['person_id'];
                 $person = find_person($pid);
                 print "\"".$person['lastname']."\",";
                 # AdvisorFirstName
@@ -1125,10 +1127,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 print "\"".$school['fullname']."\",";
                 # DissCountry
                 print "\"".$school['country']."\",";
+                # AdvisorID
+                $pid = $line['person_id'];
+                print "\"$pid\",";
                 # AdvisorType
                 print "\"Committee\",";
                 # AdvisorLastName
-                $pid = $line['person_id'];
                 $person = find_person($pid);
                 print "\"".$person['lastname']."\",";
                 # AdvisorFirstName
