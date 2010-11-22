@@ -1006,6 +1006,166 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         break;
 
         ###############################################
+        case "lis_profs_degrees":
+
+        if (is_admin())
+        {
+          echo "<h3>LIS Professors and their Degrees</h3>\n";
+
+          # get list of LIS dissertations
+          $query = "SELECT
+                    d.id
+                  FROM
+                    dissertations d
+                  WHERE
+                    d.discipline_id = '1'
+                  ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $lis_dissertations[] = $line['id'];
+          }
+
+          # big loop
+          print "<pre style=\"background-color:#ddd\">\n";
+          print "<br />";
+          print "Count,DissID,DissYear,DissLastName,DissFirstName,DissSchool,DissCountry,AdvisorType,AdvisorLastName,AdvisorFirstName,";
+          print "AdvisorDegree,AdvisorYear,AdvisorDiscipline,AdvisorSchool,AdvisorCountry\n";
+          $count = 0;
+          foreach($lis_dissertations as $did){
+            # loop through advisors
+            $query = "SELECT person_id
+                        FROM advisorships
+                        WHERE dissertation_id = $did
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+
+              # advisor line
+
+                # Count
+                $count++;
+                print "\"$count\",";
+                # DissID
+                print "\"$did\",";
+                # DissYear
+                $diss = find_dissertation($did);
+                print "\"".$diss['completedyear']."\",";
+                # DissLastName
+                $author = find_person($diss['person_id']);
+                print "\"".$author['lastname']."\",";
+                # DissFirstName
+                print "\"".$author['firstname']."\",";
+                # DissSchool
+                $school = find_school($diss['school_id']);
+                print "\"".$school['fullname']."\",";
+                # DissCountry
+                print "\"".$school['country']."\",";
+                # AdvisorType
+                print "\"Advisor\",";
+                # AdvisorLastName
+                $pid = $line['person_id'];
+                $person = find_person($pid);
+                print "\"".$person['lastname']."\",";
+                # AdvisorFirstName
+                print "\"".$person['firstname']."\",";
+                # AdvisorDegree
+                print "\"".$person['degree']."\",";
+                $diss = find_dissertation_by_person($pid);
+                if ($diss){
+                  # AdvisorYear
+                  print "\"".$diss['completedyear']."\",";
+                  # AdvisorDiscipline
+                  $disc = find_discipline($diss['discipline_id']);
+                  print "\"".$disc['title']."\",";
+                  # AdvisorSchool
+                  $school = find_school($diss['school_id']);
+                  print "\"".$school['fullname']."\",";
+                  # AdvisorCountry
+                  print "\"".$school['country']."\"";
+                }
+                else{
+                  # no dissertation for this person
+                  print "\"\",";
+                  print "\"\",";
+                  print "\"\",";
+                  print "\"\"";
+                }
+                print "\n";
+
+            }
+            # loop through committeeships
+            $query = "SELECT person_id
+                        FROM committeeships
+                        WHERE dissertation_id = $did
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+
+              # committeeship line
+
+                # Count
+                $count++;
+                print "\"$count\",";
+                # DissID
+                print "\"$did\",";
+                # DissYear
+                $diss = find_dissertation($did);
+                print "\"".$diss['completedyear']."\",";
+                # DissLastName
+                $author = find_person($diss['person_id']);
+                print "\"".$author['lastname']."\",";
+                # DissFirstName
+                print "\"".$author['firstname']."\",";
+                # DissSchool
+                $school = find_school($diss['school_id']);
+                print "\"".$school['fullname']."\",";
+                # DissCountry
+                print "\"".$school['country']."\",";
+                # AdvisorType
+                print "\"Committee\",";
+                # AdvisorLastName
+                $pid = $line['person_id'];
+                $person = find_person($pid);
+                print "\"".$person['lastname']."\",";
+                # AdvisorFirstName
+                print "\"".$person['firstname']."\",";
+                # AdvisorDegree
+                print "\"".$person['degree']."\",";
+                $diss = find_dissertation_by_person($pid);
+                if ($diss){
+                  # AdvisorYear
+                  print "\"".$diss['completedyear']."\",";
+                  # AdvisorDiscipline
+                  $disc = find_discipline($diss['discipline_id']);
+                  print "\"".$disc['title']."\",";
+                  # AdvisorSchool
+                  $school = find_school($diss['school_id']);
+                  print "\"".$school['fullname']."\",";
+                  # AdvisorCountry
+                  print "\"".$school['country']."\"";
+                }
+                else{
+                  # no dissertation for this person
+                  print "\"\",";
+                  print "\"\",";
+                  print "\"\",";
+                  print "\"\"";
+                }
+                print "\n";
+
+            }
+          }
+          echo "</pre>\n";
+
+        }
+        else
+        {
+          not_admin();
+        }
+
+        break;
+
+        ###############################################
         case "lis_profsnotfromlis":
 
           if (is_admin())

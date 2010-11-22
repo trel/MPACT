@@ -2383,6 +2383,34 @@ function find_persons_school($passed_person)
 }
 
 # -------------------------------------------------------------------------------
+function find_school($school_id)
+{
+
+  // get school
+
+  $query = "SELECT
+              s.fullname,
+              s.country
+        FROM
+          schools s
+        WHERE
+          s.id = ".$school_id."
+      ";
+
+  $result = mysql_query($query) or die(mysql_error());
+          
+  while ( $line = mysql_fetch_array($result)) {
+    $school['country'] = $line['country'];
+    $school['fullname'] = $line['fullname'];
+  }
+
+  if (isset($school))
+  {
+    return $school;
+  }
+}
+
+# -------------------------------------------------------------------------------
 function get_environment_info()
 {
   $host_info = array();
