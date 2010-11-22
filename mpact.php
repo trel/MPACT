@@ -208,6 +208,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_summary\">LIS Professors Summary</a>\n";
           echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_degrees\">LIS Professors and their Degrees (large CSV)</a>\n";
+          echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknown_degree\">LIS Professors with Unknown Degree</a>\n";
           echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknowninvestigated_degree\">LIS Professors with Unknown-Investigated Degree</a>\n";
@@ -1024,6 +1026,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           while ( $line = mysql_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
+
+          print "<p>Copy and Paste the text below into a .csv file.</p>";
 
           # big loop
           print "<pre style=\"background-color:#ddd\">\n";
