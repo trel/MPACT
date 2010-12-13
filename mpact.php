@@ -908,6 +908,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             $person = find_person($pid);
             print "$count. ";
             print get_person_link($pid);
+            $advisorcount = count(find_committeeships_under_person($pid));
+            $commcount = count(find_advisorships_under_person($pid));
+            $totalcommitteeships = $advisorcount + $commcount;
+            if ($totalcommitteeships > 1){print "<span style='color:red'><strong>";}
+            print " - $totalcommitteeships";
+            if ($totalcommitteeships > 1){print "</strong></span>";}
             print "<br />\n";
           }
           if ($count == 0)
