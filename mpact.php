@@ -58,6 +58,7 @@ $degree_types = array(
   "M.A.",
   "M.S.",
   "M.F.A.",
+  "D.E.A.",
   "F.L.A. (by thesis)",
   "LL.M.",
   "LL.D.",
