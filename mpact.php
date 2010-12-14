@@ -51,6 +51,7 @@ $inspectioncodes = array(
 $degree_types = array(
   "Unknown",
   "Unknown - Investigated",
+  "A.L.A.",
   "B.A.",
   "B.S.",
   "B.L.S.",
@@ -58,7 +59,9 @@ $degree_types = array(
   "M.A.",
   "M.S.",
   "M.F.A.",
+  "M.P.A.",
   "D.E.A.",
+  "Ed.M.",
   "F.L.A. (by thesis)",
   "LL.M.",
   "LL.D.",
