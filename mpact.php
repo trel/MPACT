@@ -1304,7 +1304,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           while ( $line = mysql_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
-          echo "<tr><td>Total LIS Dissertations</td><td>".count($lis_dissertations)."</td></tr>\n";
+          echo "<tr><td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">Total LIS Dissertations</a></td><td>".count($lis_dissertations)."</td></tr>\n";
           
           # get advisors for each diss
           $advisors = array();
@@ -1428,11 +1428,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           if (is_admin())
           {
             echo "<h3>LIS, Graduates By Year</h3>\n";
-
-            $firstyear = 1930;
-            $lastyear  = 2009;
-
-            print "- $firstyear to $lastyear, inclusive<br />";
             print "<pre>\n";
 
             # get list of dissertations
@@ -1441,19 +1436,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     FROM
                       dissertations d
                     WHERE
-                      d.discipline_id = '1' AND
-                      d.completedyear >= '$firstyear' AND
-                      d.completedyear <= '$lastyear'
+                      d.discipline_id = '1'
                     ORDER BY
                       d.completedyear ASC,
                       d.school_id ASC
                     ";
             $result = mysql_query($query) or die(mysql_error());
             $schools = array();
+            $count = 0;
             while ( $line = mysql_fetch_array($result)) {
               $dissertation = find_dissertation($line['id']);
               $person = find_person($line['person_id']);
               $schoolinfo = find_persons_school($line['person_id']);
+              $count++;
+              print $count;
+              print "|";
               print $line['completedyear'];
               print "|";
               print $schoolinfo['school'];
