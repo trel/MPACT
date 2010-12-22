@@ -1312,7 +1312,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         ";
               $result = mysql_query($query) or die(mysql_error());
               while ( $line = mysql_fetch_array($result)) {
-                if ($line['howmany'] < 1){$noadvisor[] = $id;};
+                if ($line['howmany'] > 0){$hascomm[] = $id;};
               }
             }
             # get committeeships for each diss
@@ -1324,16 +1324,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         ";
               $result = mysql_query($query) or die(mysql_error());
               while ( $line = mysql_fetch_array($result)) {
-                if ($line['howmany'] < 1){$nocomm[] = $id;};
+                if ($line['howmany'] > 0){$hascomm[] = $id;};
               }
             }
-            $total = array_merge($noadvisor,$nocomm);
-            $unique = array_unique($total);
+            $unique = array_unique($hascomm);
+            $nocomm = array_diff($lis_dissertations,$unique);
 
             # print them out
             echo "<p>\n";
             $count = 0;
-            foreach($unique as $did){
+            foreach($nocomm as $did){
               $count++;
               print "$count. ";
               $d = find_dissertation($did);
