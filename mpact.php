@@ -202,7 +202,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_title_lis\">LIS, No Title</a>\n";
           echo "<br />\n";
-          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abtract</a>\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=find_no_abstract_lis\">LIS, No Abstract</a>\n";
+          echo "<br />\n";
+          echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_nocommittee\">LIS, No Committee</a>\n";
           echo "</p>\n";
 
           echo "</td><td>\n";
@@ -1264,6 +1267,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               $count++;
               print "$count. ";
               print get_person_link($pid);
+              print "<br />\n";
+            }
+            if ($count == 0)
+            {
+              print " - None";
+            }
+            echo "</p>\n";
+
+          }
+          else
+          {
+             not_admin();
+          }
+
+        break;
+
+        ###############################################
+        case "lis_nocommittee":
+
+          if (is_admin())
+          {
+
+            echo "<h3>LIS Dissertations with no committee</h3>\n";
+
+            # get list of LIS dissertations
+            $query = "SELECT
+                      d.id
+                    FROM
+                      dissertations d
+                    WHERE
+                      d.discipline_id = '1'
+                    ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $lis_dissertations[] = $line['id'];
+            }
+            # get advisors for each diss
+            $advisors = array();
+            foreach ($lis_dissertations as $id){
+              $query = "SELECT count(*) as howmany
+                          FROM advisorships
+                          WHERE dissertation_id = $id
+                        ";
+              $result = mysql_query($query) or die(mysql_error());
+              while ( $line = mysql_fetch_array($result)) {
+                if ($line['howmany'] < 1){$noadvisor[] = $id;};
+              }
+            }
+            # get committeeships for each diss
+            $committeemembers = array();
+            foreach ($lis_dissertations as $id){
+              $query = "SELECT count(*) as howmany
+                          FROM committeeships
+                          WHERE dissertation_id = $id
+                        ";
+              $result = mysql_query($query) or die(mysql_error());
+              while ( $line = mysql_fetch_array($result)) {
+                if ($line['howmany'] < 1){$nocomm[] = $id;};
+              }
+            }
+            $total = array_merge($noadvisor,$nocomm);
+            $unique = array_unique($total);
+
+            # print them out
+            echo "<p>\n";
+            $count = 0;
+            foreach($unique as $did){
+              $count++;
+              print "$count. ";
+              $d = find_dissertation($did);
+              print get_person_link($d['person_id']);
               print "<br />\n";
             }
             if ($count == 0)
