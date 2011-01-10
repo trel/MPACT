@@ -332,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         while ( $line = mysql_fetch_array($result)) {
           extract($line);
         }
-        echo "<tr><td>Disciplines</td><td>".$disciplinecount."</td></tr>\n";
+        echo "<tr><td>Disciplines</td><td align=\"right\">".$disciplinecount."</td></tr>\n";
 
         # schools
         $query = "SELECT count(*) as schoolcount FROM schools";
@@ -340,7 +340,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         while ( $line = mysql_fetch_array($result)) {
           extract($line);
         }
-        echo "<tr><td>Schools</td><td>".$schoolcount."</td></tr>\n";
+        echo "<tr><td>Schools</td><td align=\"right\">".$schoolcount."</td></tr>\n";
 
         # diss
         $query = "SELECT count(*) as disscount FROM dissertations";
@@ -348,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         while ( $line = mysql_fetch_array($result)) {
           extract($line);
         }
-        echo "<tr><td>Dissertations</td><td>".$disscount."</td></tr>\n";
+        echo "<tr><td>Dissertations</td><td align=\"right\">".$disscount."</td></tr>\n";
 
         # a
         $query = "SELECT count(*) as advisorcount FROM advisorships";
@@ -356,7 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         while ( $line = mysql_fetch_array($result)) {
           extract($line);
         }
-        echo "<tr><td>Advisorships</td><td>".$advisorcount."</td></tr>\n";
+        echo "<tr><td>Advisorships</td><td align=\"right\">".$advisorcount."</td></tr>\n";
 
         # c
         $query = "SELECT count(*) as committeeshipscount FROM committeeships";
@@ -364,7 +364,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         while ( $line = mysql_fetch_array($result)) {
           extract($line);
         }
-        echo "<tr><td>Committeeships</td><td>".$committeeshipscount."</td></tr>\n";
+        echo "<tr><td>Committeeships</td><td align=\"right\">".$committeeshipscount."</td></tr>\n";
 
         # full
         $query = "SELECT count(*) as peoplecount FROM people";
@@ -372,12 +372,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         while ( $line = mysql_fetch_array($result)) {
           extract($line);
         }
-        echo "<tr><td>People</td><td>".$peoplecount."</td></tr>\n";
+        echo "<tr><td>People</td><td align=\"right\">".$peoplecount."</td></tr>\n";
+        echo "</table>\n";
+
+
+        # dissertations by country
+        echo "<br /><br />\n";
+        echo "<p><b>Dissertations by Country:</b></p><br />\n";
+        $query = "SELECT count(*) as dissnone FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"\")";
+        $result = mysql_query($query) or die(mysql_error());
+        while ( $line = mysql_fetch_array($result)) {
+          extract($line);
+        }
+        $query = "SELECT count(*) as dissusa FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"USA\")";
+        $result = mysql_query($query) or die(mysql_error());
+        while ( $line = mysql_fetch_array($result)) {
+          extract($line);
+        }
+        $query = "SELECT count(*) as disscanada FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"Canada\")";
+        $result = mysql_query($query) or die(mysql_error());
+        while ( $line = mysql_fetch_array($result)) {
+          extract($line);
+        }
+        $query = "SELECT count(*) as dissother FROM dissertations WHERE school_id IN
+          (SELECT id FROM schools WHERE (country != \"\" AND country != \"USA\" AND country != \"Canada\"))";
+        $result = mysql_query($query) or die(mysql_error());
+        while ( $line = mysql_fetch_array($result)) {
+          extract($line);
+        }
+        echo "<table border='1'>\n";
+        echo "<tr><td>USA</td><td align=\"right\">".$dissusa."</td>
+                  <td align=\"right\">".sprintf("%.2f",100*$dissusa/$disscount)."%</td>
+                  <td align=\"right\">".sprintf("%.2f",100*($dissusa)/$disscount)."%</td></tr>\n";
+        echo "<tr><td>Canada</td><td align=\"right\">".$disscanada."</td>
+                  <td align=\"right\">".sprintf("%.2f",100*$disscanada/$disscount)."%</td>
+                  <td align=\"right\">".sprintf("%.2f",100*($dissusa+$disscanada)/$disscount)."%</td></tr>\n";
+        echo "<tr><td>Other</td><td align=\"right\">".$dissother."</td>
+                  <td align=\"right\">".sprintf("%.2f",100*$dissother/$disscount)."%</td>
+                  <td align=\"right\">".sprintf("%.2f",100*($dissusa+$disscanada+$dissother)/$disscount)."%</td></tr>\n";
+        echo "<tr><td>None Listed</td><td align=\"right\">".$dissnone."</td>
+                  <td align=\"right\">".sprintf("%.2f",100*$dissnone/$disscount)."%</td>
+                  <td align=\"right\">".sprintf("%.2f",100*($dissusa+$disscanada+$dissother+$dissnone)/$disscount)."%</td></tr>\n";
+        echo "<tr><td>Total</td><td align=\"right\">".$disscount."</td>
+                  <td align=\"right\">".sprintf("%.2f",100*$disscount/$disscount)."%</td>
+                  <td></td></tr>\n";
         echo "</table>\n";
 
         # dissertations by year
         echo "<br /><br />\n";
-        echo "Dissertations by Year:<br />\n";
+        echo "<p><b>Dissertations by Year:</b></p><br />\n";
         $query = "SELECT completedyear, count(*) as disscount FROM dissertations GROUP BY completedyear";
         $result = mysql_query($query) or die(mysql_error());
         while ( $line = mysql_fetch_array($result)) {
