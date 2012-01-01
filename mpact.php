@@ -289,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (!$_GET['id']){action_box("No ID given.");}
         else
         {
-          draw_tree($_GET['id']);
+          draw_tree((int)$_GET['id']);
         }
 
         break;
@@ -303,7 +303,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<br /><br />\n";
           echo "Advisors and Advisees of ".get_person_link($_GET['id']);
           echo "<br /><br />\n";
-          draw_graph($_GET['id']);
+          draw_graph((int)$_GET['id']);
         }
 
         break;
