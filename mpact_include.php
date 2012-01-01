@@ -2627,9 +2627,8 @@ function generate_dotgraph($passed_person, $forcenew="no")
     $getandgenerategraph = "/bin/cat $dotfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename 2>&1";
 #      echo "getandgenerategraph = $getandgenerategraph<br />";
     exec($getandgenerategraph);
-#    $chowncmd = "chown ".$host_info['ownername']." $appfilename";
-#    echo "chowncmd = $chowncmd<br />";
-#    exec($chowncmd);
+    exec("chmod 666 $appimagemap");
+    exec("chmod 666 $appfilename");
     if (!file_exists($appfilename)) {
       # mark as dirty if it didn't work
       mark_record_as_dirty($person);
