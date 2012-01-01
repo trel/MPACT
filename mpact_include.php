@@ -2625,6 +2625,10 @@ function generate_dotgraph($passed_person, $forcenew="no")
 #    $chowncmd = "chown ".$host_info['ownername']." $appfilename";
 #    echo "chowncmd = $chowncmd<br />";
 #    exec($chowncmd);
+    if (!file_exists($appfilename)) {
+      # mark as dirty if it didn't work
+      mark_record_as_dirty($person);
+    }
   }
   else
   {
