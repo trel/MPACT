@@ -2441,12 +2441,12 @@ function get_environment_info()
     $host_info['dotfiletype'] = "png";
     $host_info['dotfontface'] = "cour";
   }
-  else if ($hostname == "localhost.com")
+  else if ($hostname == "localhost.com" || $hostname == "trelpancake")
   {
     # my laptop
     $host_info['hostname']    = "laptop";
     $host_info['ownername']   = "trel";
-    $host_info['dotlocation'] = "/sw/bin/dot";
+    $host_info['dotlocation'] = "/opt/local/bin/dot";
     $host_info['appdir']      = "/Users/trel/Sites/MPACT";
     $host_info['webdir']      = "http://localhost.com/~trel/MPACT";
     $host_info['dotcachedir'] = "dotgraphs";
@@ -2473,18 +2473,35 @@ function delete_associated_dotgraphs($passed_person)
   foreach ($entire_family_tree as $one)
   {
     # set the filenames
-    $dotfilename = $host_info['appdir']."/".$host_info['dotcachedir']."/$one.".$host_info['dotfiletype'];
+    $dotfilename = $host_info['appdir']."/".$host_info['dotcachedir']."/$one.dot";
+    $imagefilename = $host_info['appdir']."/".$host_info['dotcachedir']."/$one.".$host_info['dotfiletype'];
     $imagemapfilename = $host_info['appdir']."/".$host_info['dotcachedir']."/$one.map";
     # delete each if they exist
     if (file_exists($dotfilename))
     {
       `rm $dotfilename`;
     }
+    if (file_exists($imagefilename))
+    {
+      `rm $imagefilename`;
+    }
     if (file_exists($imagemapfilename))
     {
       `rm $imagemapfilename`;
     }
+    # mark as 'dirty' so cronjob can recreate images
+    mark_record_as_dirty($one);
   }
+}
+
+# -------------------------------------------------------------------------------
+function mark_record_as_dirty($passed_person)
+{
+  # mark database record for this person as dirty
+  # a cronjob will pick these up and regenerate their dotgraphs
+  # gets around permission issues on the server if necessary
+  $query = "UPDATE people SET regenerate_dotgraph = '1' WHERE id = '".$passed_person."'";
+  $result = mysql_query($query) or die(mysql_error());
 }
 
 # -------------------------------------------------------------------------------
@@ -2564,47 +2581,57 @@ function draw_tree_dotgraph($passed_person)
   $host_info = get_environment_info();
   if (isset($host_info['appdir']))
   {
-    $appcache = $host_info['appdir']."/".$host_info['dotcachedir'];
-    $webcache = $host_info['webdir']."/".$host_info['dotcachedir'];
-    $appfilename = "$appcache/$person.".$host_info['dotfiletype'];
-    #echo "appfilename = $appfilename<br />";
-    $dotfilename = "$appcache/$person.dot";
-    #echo "dotfilename = $dotfilename<br />";
-    $webfilename = "$webcache/$person.".$host_info['dotfiletype'];
-    #echo "webfilename = $webfilename<br />";
-    $appimagemap = "$appcache/$person.map";
-    #echo "appimagemap = $appimagemap<br />";
-
-    if (!file_exists($appfilename)) {
-      # assumption is that the cachedir exists... (run setupmpact.sh)
-      # generate dotfile
-      $dotfilecontents = generate_dotfile($person);
-      $fh = fopen($dotfilename, 'w');
-      fwrite($fh, $dotfilecontents);
-      fclose($fh);
-      # generate graph
-        $getandgenerategraph = "/bin/cat $dotfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename 2>&1";
-#      echo "getandgenerategraph = $getandgenerategraph<br />";
-      exec($getandgenerategraph);
-  #    $chowncmd = "chown ".$host_info['ownername']." $appfilename";
-  #    echo "chowncmd = $chowncmd<br />";
-  #    exec($chowncmd);
-  
-    }
-    else
-    {
-  #    echo "SHOWING CACHED COPY<br />";
-    }
-
+    $webfilename = generate_dotgraph($person);
     echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_graph&id=$person\"><img src=\"$webfilename\" width=\"300\" border=\"0\" alt=\"Directed Graph\" title=\"Click to Enlarge\"></a><br />";
-
   }
   else
   {
     echo "graphics libraries are not configured";
   }
+}
 
+# -------------------------------------------------------------------------------
+function generate_dotgraph($passed_person, $forcenew="no")
+{
+  $person = $passed_person;
+  $host_info = get_environment_info();
+#  print_r($host_info);
+  $appcache = $host_info['appdir']."/".$host_info['dotcachedir'];
+  $webcache = $host_info['webdir']."/".$host_info['dotcachedir'];
+  $appfilename = "$appcache/$person.".$host_info['dotfiletype'];
+#  echo "appfilename = $appfilename<br />\n";
+  $dotfilename = "$appcache/$person.dot";
+#  echo "dotfilename = $dotfilename<br />\n";
+  $webfilename = "$webcache/$person.".$host_info['dotfiletype'];
+#  echo "webfilename = $webfilename<br />\n";
+  $appimagemap = "$appcache/$person.map";
+#  echo "appimagemap = $appimagemap<br />\n";
 
+  if (!file_exists($appfilename)) {
+    # assumption is that the cachedir exists... (run setupmpact.sh)
+    # generate dotfile
+    if (!file_exists($dotfilename) or $forcenew == "force") {
+#      print " - creating dotfile...\n";
+      $dotfilecontents = generate_dotfile($person);
+      $fh = fopen($dotfilename, 'w');
+      fwrite($fh, $dotfilecontents);
+      fclose($fh);
+      exec("chmod 666 $dotfilename");
+    }
+    # generate graph
+    $getandgenerategraph = "/bin/cat $dotfilename | ".$host_info['dotlocation']." -Nfontname=".$host_info['dotfontface']." -Gcharset=latin1 -Tcmapx -o$appimagemap -T".$host_info['dotfiletype']." -o$appfilename 2>&1";
+#      echo "getandgenerategraph = $getandgenerategraph<br />";
+    exec($getandgenerategraph);
+#    $chowncmd = "chown ".$host_info['ownername']." $appfilename";
+#    echo "chowncmd = $chowncmd<br />";
+#    exec($chowncmd);
+  }
+  else
+  {
+#    echo "SHOWING CACHED COPY<br />";
+  }
+
+  return $webfilename;
 }
 
 # -------------------------------------------------------------------------------
