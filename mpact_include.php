@@ -2417,7 +2417,7 @@ function get_environment_info()
   $hostname = $_SERVER['SERVER_NAME'];
   if ($hostname == ""){$hostname = exec(hostname);}
 #  echo "hostname = [$hostname]<br />";
-  if ($hostname == "www.ibiblio.org" || $hostname == "www-dev.ibiblio.org")
+  if ($hostname == "www.ibiblio.org" || $hostname == "www-dev.ibiblio.org" || $hostname == "login1.ibiblio.org")
   {
     # the main install on ibiblio
     $host_info['hostname']    = "ibiblio";
