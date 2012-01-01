@@ -1,7 +1,6 @@
 #!/bin/sh
 echo "setting up permissions..."
 chmod 777 dotgraphs
-chmod 600 datadump.sql
 chmod 600 droptables.sql
 chmod 644 mpact_db.php
 chmod 600 mpact_db.php.sample
