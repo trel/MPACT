@@ -2582,7 +2582,12 @@ function draw_tree_dotgraph($passed_person)
   if (isset($host_info['appdir']))
   {
     $webfilename = generate_dotgraph($person);
-    echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_graph&id=$person\"><img src=\"$webfilename\" width=\"300\" border=\"0\" alt=\"Directed Graph\" title=\"Click to Enlarge\"></a><br />";
+    if ($webfilename == "marked_as_dirty"){
+      echo "generating graph, please reload";
+    }
+    else{
+      echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_graph&id=$person\"><img src=\"$webfilename\" width=\"300\" border=\"0\" alt=\"Directed Graph\" title=\"Click to Enlarge\"></a><br />";
+    }
   }
   else
   {
@@ -2628,6 +2633,7 @@ function generate_dotgraph($passed_person, $forcenew="no")
     if (!file_exists($appfilename)) {
       # mark as dirty if it didn't work
       mark_record_as_dirty($person);
+      return "marked_as_dirty";
     }
   }
   else
