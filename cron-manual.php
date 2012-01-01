@@ -2,8 +2,15 @@
 
 require 'envsetup.php';
 
+mark_all_graphs_as_dirty();
 gen_all_profs_at_dept();
 #gen_all_mpact_scores();
+
+function mark_all_graphs_as_dirty()
+{
+  $query = "UPDATE people SET regenerate_dotgraph = '1'";
+  $result = mysql_query($query) or die(mysql_error());
+}
 
 function gen_all_profs_at_dept()
 {
