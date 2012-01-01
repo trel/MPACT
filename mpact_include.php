@@ -2422,12 +2422,12 @@ function get_environment_info()
     # the main install on ibiblio
     $host_info['hostname']    = "ibiblio";
     $host_info['ownername']   = "mpact";
-    $host_info['dotlocation'] = "/usr/bin/dot";
+    $host_info['dotlocation'] = "/export/sunsite/users/mpact/terrelllocal/bin/dot";
     $host_info['appdir']      = "/public/html/mpact";
     $host_info['webdir']      = "http://www.ibiblio.org/mpact";
     $host_info['dotcachedir'] = "dotgraphs";
     $host_info['dotfiletype'] = "png";
-    $host_info['dotfontface'] = "cour";
+    $host_info['dotfontface'] = "Times-Roman";
   }
   else if ($hostname == "trel.dyndns.org")
   {
