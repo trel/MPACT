@@ -2,7 +2,7 @@
 
 require 'envsetup.php';
 
-mark_all_graphs_as_dirty();
+#mark_all_graphs_as_dirty();
 gen_all_profs_at_dept();
 #gen_all_mpact_scores();
 
