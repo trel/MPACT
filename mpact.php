@@ -220,6 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_summary\">LIS Professors Summary</a>\n";
           echo "<br />\n";
+          echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_with_mpact\">LIS Professors with MPACT</a>\n";
+          echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_degrees\">LIS Professors and their Degrees (large CSV)</a>\n";
           echo "<br />\n";
           echo "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_unknown_degree\">LIS Professors with Unknown Degree</a>\n";
@@ -1399,6 +1401,94 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         break;
 
         ###############################################
+        case "lis_profs_with_mpact":
+
+        if (is_admin())
+        {
+          echo "<h3>LIS Professors With MPACT</h3>\n";
+        
+          # advisors or committee members
+          # that served on an lis dissertation
+
+
+          # get list of LIS dissertations
+          $query = "SELECT
+                    d.id
+                  FROM
+                    dissertations d
+                  WHERE
+                    d.discipline_id = '1'
+                  ";
+          $result = mysql_query($query) or die(mysql_error());
+          while ( $line = mysql_fetch_array($result)) {
+            $lis_dissertations[] = $line['id'];
+          }
+          
+          # get advisors for each diss
+          $advisors = array();
+          foreach ($lis_dissertations as $id){
+            $query = "SELECT person_id
+                        FROM advisorships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $advisors[] = $line['person_id'];
+            }
+          }
+
+          # get committeeships for each diss
+          $committeemembers = array();
+          foreach ($lis_dissertations as $id){
+            $query = "SELECT person_id
+                        FROM committeeships
+                        WHERE dissertation_id = $id
+                      ";
+            $result = mysql_query($query) or die(mysql_error());
+            while ( $line = mysql_fetch_array($result)) {
+              $committeemembers[] = $line['person_id'];
+            }
+          }
+
+          $total = array_merge($advisors,$committeemembers);
+
+          $unique = array_unique($total);
+
+          echo "<pre>\n";
+          echo "Count|Name|Year|A|C|A+C|T\n";
+          foreach ($unique as $prof){
+            $mpact = mpact_scores($prof);
+            $person = find_person($prof);
+            $dissertation = find_dissertation_by_person($prof);
+            # count
+            $count += 1;
+            echo "$count";
+            echo "|";
+            # name
+            echo $person['fullname'];
+            echo "|";
+            # year
+            echo $dissertation['completedyear'];
+            echo "|";
+            # a
+            echo $mpact['A'];
+            echo "|";
+            # c
+            echo $mpact['C'];
+            echo "|";
+            # a+c
+            echo $mpact['AC'];
+            echo "|";
+            # t
+            echo $mpact['T'];
+            echo "\n";
+          }
+          echo "</pre>\n";
+        }
+
+        break;
+
+        ###############################################
         case "lis_profs_summary":
         
         if (is_admin())
@@ -1462,7 +1552,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "</td></tr>\n";
 
           $unique = array_unique($total);
-          echo "<tr><td>Total number of unique advisor/committee members on LIS dissertations:</td><td>";
+          echo "<tr><td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_profs_with_mpact\">Total number of unique advisor/committee members on LIS dissertations</a>:</td><td>";
+
           echo count($unique);
           echo "</td></tr>\n";
 
