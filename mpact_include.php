@@ -47,6 +47,7 @@ function comparePassword( $password, $hashed ){
 
 # -------------------------------------------------------------------------------
 function mpact_logger($message,$type="general"){
+  global $dbh;
   $ip = ($_SERVER['REMOTE_ADDR'] == "127.0.0.1") ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
   if (!get_magic_quotes_gpc()) {$message = addslashes($message);}
   $query = "INSERT logs
@@ -59,7 +60,7 @@ function mpact_logger($message,$type="general"){
               action    = '".$_SERVER['REQUEST_URI']."',
               agent     = '".$_SERVER['HTTP_USER_AGENT']."'
             ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 }
 
 # -------------------------------------------------------------------------------
@@ -94,11 +95,11 @@ function action_box($message,$bounce = "0",$location = "index.php"){
     ";
   }
 
-} 
+}
 
 # -------------------------------------------------------------------------------
 function xhtml_orig_web_header(){
-  
+
   # make search box happy
   if (!isset($_POST['q'])){$_POST['q'] = "";}
   if (!isset($_POST['qta'])){$_POST['qta'] = "";}
@@ -106,22 +107,22 @@ function xhtml_orig_web_header(){
 
   # print out header info
   echo "
-  
+
   <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
   <html>
   <head>
   <title>MPACT</title>
-  
+
   <link rel=\"stylesheet\" type=\"text/css\" href=\"mpact.css\">
   <script src=\"sorttable.js\" type=\"text/javascript\"></script>
   <script src=\"mpact.js\" type=\"text/javascript\"></script>
 
   </head>
   <body leftmargin=\"0\" topmargin=\"0\" marginwidth=\"0\" marginheight=\"0\" >
-  
+
   <table width=\"90%\" height=\"95%\" border=\"0\" align=\"center\"
   cellpadding=\"0\" cellspacing=\"0\">
-  
+
   <tr>
     <td height=\"40\">
       <table border=\"0\" width=\"100%\">
@@ -162,7 +163,7 @@ echo "
       </table>
     </td>
   </tr>
-  
+
   <tr><td valign=\"top\"><br />
 
   ";
@@ -172,7 +173,7 @@ echo "
 
 # -------------------------------------------------------------------------------
 function xhtml_web_header(){
-  
+
   # make search box happy
   if (!isset($_POST['q'])){$_POST['q'] = "";}
   if (!isset($_POST['qta'])){$_POST['qta'] = "";}
@@ -180,7 +181,7 @@ function xhtml_web_header(){
 
   # print out header info
   echo "
-  
+
   <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
   <html>
   <head>
@@ -190,7 +191,7 @@ function xhtml_web_header(){
   <script src=\"mpact.js\" type=\"text/javascript\"></script>
   </head>
   <body leftmargin=\"0\" topmargin=\"0\" marginwidth=\"0\" marginheight=\"0\" >
-  
+
 ";
 
 echo "<div id=\"accountstatus\"><p>";
@@ -207,11 +208,11 @@ echo "
   <div id=\"headertable\">
   <table border=\"0\" align=\"center\" width=\"870\">
   <tr>
-  
+
     <td>
       <a href=\"http://www.slis.indiana.edu/\"><img src=\"./images/slis_logo_crimson.png\" width=\"200\"></a>
     </td>
-    
+
     <td>
       <span id=\"mpactlogo\"><a href=\"./\"><img src=\"./images/mpact-tassel.png\" width=\"470\"></a></span>
       <span class=\"navtextlinks\">
@@ -244,7 +245,7 @@ echo "    </td>
     <td>
       <a href=\"http://sils.unc.edu/\"><img src=\"./images/sils_logo.png\" width=\"200\"></a>
     </td>
-  
+
   </tr>
   </table>
   </div>
@@ -287,10 +288,11 @@ function is_email_valid ($address)
 # -------------------------------------------------------------------------------
 function find_glossaryterms()
 {
+  global $dbh;
   $query = "SELECT id, term, definition FROM glossary";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
   $glossaryterms = array();
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $glossaryterms['ids'][$line['term']] = $line['id'];
     $glossaryterms['defs'][$line['id']] = $line['definition'];
   }
@@ -300,11 +302,12 @@ function find_glossaryterms()
 # -------------------------------------------------------------------------------
 function show_glossary()
 {
+  global $dbh;
   $query = "SELECT id, term, definition FROM glossary ORDER BY term ASC";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $results = array();
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     array_push($results,$line);
   }
 
@@ -330,11 +333,12 @@ function show_glossary()
 # -------------------------------------------------------------------------------
 function show_glossaryterm($id)
 {
+  global $dbh;
   $query = "SELECT id, term, definition FROM glossary WHERE id = $id";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $results = array();
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $glossaryterm = $line;
   }
 
@@ -383,11 +387,11 @@ function search_box($q="")
   echo "<p>People Search: ";
   if ($q)
   {
-    echo "<input type=\"text\" name=\"q\" value=\"$q\">\n";    
+    echo "<input type=\"text\" name=\"q\" value=\"$q\">\n";
   }
   else
   {
-    echo "<input type=\"text\" name=\"q\">\n";    
+    echo "<input type=\"text\" name=\"q\">\n";
   }
   echo "</p>\n";
   echo "</form>\n";
@@ -396,6 +400,7 @@ function search_box($q="")
 # -------------------------------------------------------------------------------
 function people_search($q)
 {
+  global $dbh;
   $q = trim($q);
   if (!get_magic_quotes_gpc()) {$q = addslashes($q);}
   $results = array();
@@ -403,7 +408,7 @@ function people_search($q)
     return $results;
   }
 
-  $pieces = split(" ",$q);
+  $pieces = explode(" ",$q);
 #  print_r($pieces);
   if (count($pieces) == 2)
   {
@@ -418,14 +423,14 @@ function people_search($q)
                     n.middlename LIKE '%".$pieces[0]."%' OR
                     n.lastname   LIKE '%".$pieces[0]."%' OR
                     n.suffix     LIKE '%".$pieces[0]."%')
-                  
+
                   AND
-                  
+
                     (n.firstname  LIKE '%".$pieces[1]."%' OR
                     n.middlename LIKE '%".$pieces[1]."%' OR
                     n.lastname   LIKE '%".$pieces[1]."%' OR
                     n.suffix     LIKE '%".$pieces[1]."%')
-                  
+
                   )
                   AND
                   n.person_id = p.id
@@ -448,7 +453,7 @@ function people_search($q)
                     n.middlename LIKE '%".$pieces[0]."%' OR
                     n.lastname   LIKE '%".$pieces[0]."%' OR
                     n.suffix     LIKE '%".$pieces[0]."%')
-                  
+
                   AND
 
                     (n.firstname  LIKE '%".$pieces[1]."%' OR
@@ -462,7 +467,7 @@ function people_search($q)
                     n.middlename LIKE '%".$pieces[2]."%' OR
                     n.lastname   LIKE '%".$pieces[2]."%' OR
                     n.suffix     LIKE '%".$pieces[2]."%')
-                  
+
                   )
                   AND
                   n.person_id = p.id
@@ -495,9 +500,9 @@ function people_search($q)
                   n.lastname, n.suffix, n.firstname, n.middlename
               ";
   }
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     array_push($results,$line['person_id']);
   }
   return $results;
@@ -506,6 +511,7 @@ function people_search($q)
 # -------------------------------------------------------------------------------
 function title_abstract_search($q)
 {
+  global $dbh;
   $q = trim($q);
   if (!get_magic_quotes_gpc()) {$q = addslashes($q);}
   $results = array();
@@ -513,7 +519,7 @@ function title_abstract_search($q)
     return $results;
   }
 
-  $pieces = split(" ",$q);
+  $pieces = explode(" ",$q);
 #  print_r($pieces);
   if (count($pieces) == 2)
   {
@@ -526,12 +532,12 @@ function title_abstract_search($q)
 
                     (d.title   LIKE '%".$pieces[0]."%' OR
                     d.abstract LIKE '%".$pieces[0]."%')
-                  
+
                   AND
 
                     (d.title   LIKE '%".$pieces[1]."%' OR
                     d.abstract LIKE '%".$pieces[1]."%')
-                  
+
                   )
                   AND
                   n.person_id = d.person_id
@@ -552,7 +558,7 @@ function title_abstract_search($q)
 
                     (d.title   LIKE '%".$pieces[0]."%' OR
                     d.abstract LIKE '%".$pieces[0]."%')
-                  
+
                   AND
 
                     (d.title   LIKE '%".$pieces[1]."%' OR
@@ -562,7 +568,7 @@ function title_abstract_search($q)
 
                     (d.title   LIKE '%".$pieces[2]."%' OR
                     d.abstract LIKE '%".$pieces[2]."%')
-                  
+
                   )
                   AND
                   n.person_id = d.person_id
@@ -593,9 +599,9 @@ function title_abstract_search($q)
                   n.lastname, n.suffix, n.firstname, n.middlename
               ";
   }
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     array_push($results,$line['person_id']);
   }
   return $results;
@@ -604,6 +610,7 @@ function title_abstract_search($q)
 # -------------------------------------------------------------------------------
 function notes_search($q)
 {
+  global $dbh;
   $q = trim($q);
   if (!get_magic_quotes_gpc()) {$q = addslashes($q);}
   $results = array();
@@ -611,7 +618,7 @@ function notes_search($q)
     return $results;
   }
 
-  $pieces = split(" ",$q);
+  $pieces = explode(" ",$q);
 #  print_r($pieces);
   if (count($pieces) == 2)
   {
@@ -623,11 +630,11 @@ function notes_search($q)
                   (
 
                     (d.notes    LIKE '%".$pieces[0]."%')
-                  
+
                   AND
 
                     (d.notes    LIKE '%".$pieces[1]."%')
-                  
+
                   )
                   AND
                   n.person_id = d.person_id
@@ -647,7 +654,7 @@ function notes_search($q)
                   (
 
                     (d.notes    LIKE '%".$pieces[0]."%')
-                  
+
                   AND
 
                     (d.notes    LIKE '%".$pieces[1]."%')
@@ -655,7 +662,7 @@ function notes_search($q)
                   AND
 
                     (d.notes    LIKE '%".$pieces[2]."%')
-                  
+
                   )
                   AND
                   n.person_id = d.person_id
@@ -685,9 +692,9 @@ function notes_search($q)
                   n.lastname, n.suffix, n.firstname, n.middlename
               ";
   }
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     array_push($results,$line['person_id']);
   }
   return $results;
@@ -707,15 +714,16 @@ function encode_linebreaks($bigtext)
 # -------------------------------------------------------------------------------
 function get_logs($offset="0")
 {
+  global $dbh;
 #  echo "[$offset]";
   $query = "SELECT * FROM logs ORDER BY id DESC LIMIT 100";
   if ($offset != ""){$query .= " OFFSET $offset";}
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
 #  echo $query;
   $entries = array();
   $counter = 0;
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $counter++;
     $entries[$counter] = $line;
   }
@@ -726,15 +734,16 @@ function get_logs($offset="0")
 # -------------------------------------------------------------------------------
 function get_dissertation_history($id)
 {
+  global $dbh;
   $query = "SELECT * FROM logs
               WHERE type='dissertation' AND message LIKE '$id %'
               ORDER BY id DESC";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
 #  echo $query;
   $entries = array();
   $counter = 0;
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $counter++;
     $entries[$counter] = $line;
   }
@@ -745,11 +754,12 @@ function get_dissertation_history($id)
 # -------------------------------------------------------------------------------
 function find_all_people()
 {
+  global $dbh;
   # return array of all people_ids in database (slow....)
     # all people
     $query = "SELECT id as person_id FROM people";
-    $result = mysql_query($query) or die(mysql_error());
-    while ( $line = mysql_fetch_array($result)) {
+    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+    while ( $line = mysqli_fetch_array($result)) {
       $people[] = $line['person_id'];
     }
     return $people;
@@ -766,7 +776,7 @@ function get_person_link($person_id)
 
   $dissertation = find_dissertation_by_person($person_id);
   $discipline = isset($dissertation['discipline_id']) ? $disciplines[$dissertation['discipline_id']] : "";
-  
+
   $link = "<a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$person['id']."\" title=\"$discipline\">".$fullname."</a>";
 
   return $link;
@@ -776,6 +786,7 @@ function get_person_link($person_id)
 # -------------------------------------------------------------------------------
 function find_orphans()
 {
+  global $dbh;
 
   # finding people with no dissertation and no students
 
@@ -789,13 +800,13 @@ function find_orphans()
             ORDER BY n.lastname,n.firstname,n.middlename
           ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $people[$line['person_id']] = $line;
 #    echo " ".$line['person_id']."<br />\n";
   }
-  
+
   echo "people: ".count($people)."<br />\n";
 
   # with dissertations only
@@ -807,9 +818,9 @@ function find_orphans()
               d.person_id = p.id
           ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $with_dissertations[$line['person_id']] = $line;
 #    echo " ".$line['person_id']."<br />\n";
   }
@@ -824,15 +835,15 @@ function find_orphans()
   # orphans = teachers who don't have students
   # get advisorships
   $query = "SELECT person_id FROM advisorships";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     $advisors[$line['person_id']] = $line;
   }
   echo "advisors: ".count($advisors)."<br />\n";
   # get committeeships
   $query = "SELECT person_id FROM committeeships";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     $committeemembers[$line['person_id']] = $line;
   }
   echo "committeemembers: ".count($committeemembers)."<br />\n";
@@ -849,29 +860,30 @@ function find_orphans()
 # -------------------------------------------------------------------------------
 function is_orphan($person_id)
 {
+  global $dbh;
   # confirm person exists
   $query = "SELECT * FROM people WHERE id = '".$person_id."'";
-  $result = mysql_query($query) or die(mysql_error());
-  $line = mysql_fetch_array($result);
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $line = mysqli_fetch_array($result);
   if (!$line['id']){echo "not a person";return 0;}
   # confirm no dissertation
   $query = "SELECT * FROM dissertations WHERE person_id = '".$person_id."'";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     echo "found a dissertation";
     return 0;
   }
   # confirm not a committeemember
   $query = "SELECT * FROM committeeships WHERE person_id = '".$person_id."'";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     echo "found a committeeship";
     return 0;
   }
   # confirm not an advisor
   $query = "SELECT * FROM advisorships WHERE person_id = '".$person_id."'";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     echo "found an advisorship";
     return 0;
   }
@@ -880,15 +892,16 @@ function is_orphan($person_id)
 # -------------------------------------------------------------------------------
 function delete_person($person_id)
 {
+  global $dbh;
   if (is_orphan($person_id))
   {
     $before = find_person($person_id);
     # delete all names
     $query = "DELETE FROM names WHERE person_id = '".$person_id."'";
-    $result = mysql_query($query) or die(mysql_error());
+    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
     # delete the person
     $query = "DELETE FROM people WHERE id = '".$person_id."' LIMIT 1";
-    $result = mysql_query($query) or die(mysql_error());
+    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
     # log it
     mpact_logger("deleted person[".$person_id."] (".$before['fullname'].")");
     return 1;
@@ -902,6 +915,7 @@ function delete_person($person_id)
 # -------------------------------------------------------------------------------
 function remove_duplicate_names($person_id)
 {
+  global $dbh;
 
   $names = array();
   $deleteme = array();
@@ -914,10 +928,10 @@ function remove_duplicate_names($person_id)
         FROM people
         WHERE id = '".$person_id."'
       ";
-    
-  $result = mysql_query($query) or die(mysql_error());
 
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result)) {
     extract($line);
   }
 
@@ -927,11 +941,11 @@ function remove_duplicate_names($person_id)
           id = '".$preferred_name_id."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $fullname = "".$line['firstname']." ".$line['middlename']." ".$line['lastname']." ".$line['suffix']."";
-    $names[$fullname] = $line['id'];    
+    $names[$fullname] = $line['id'];
   }
 
   // get the rest of the names for this person
@@ -941,9 +955,9 @@ function remove_duplicate_names($person_id)
           id != '".$preferred_name_id."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $fullname = "".$line['firstname']." ".$line['middlename']." ".$line['lastname']." ".$line['suffix']."";
     if (isset($names[$fullname]))
     {
@@ -951,7 +965,7 @@ function remove_duplicate_names($person_id)
     }
     else
     {
-      $names[$fullname] = $line['id'];    
+      $names[$fullname] = $line['id'];
     }
   }
 
@@ -963,7 +977,7 @@ function remove_duplicate_names($person_id)
             id = '".$one."'
         ";
 
-    $result = mysql_query($query) or die(mysql_error());
+    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
   }
 
   # log it
@@ -974,6 +988,7 @@ function remove_duplicate_names($person_id)
 # -------------------------------------------------------------------------------
 function add_mentor($type,$student_id,$mentor_id)
 {
+  global $dbh;
   $student = find_person($student_id);
   $mentor = find_person($mentor_id);
   $dissertation = find_dissertation_by_person($student_id);
@@ -995,7 +1010,7 @@ function add_mentor($type,$student_id,$mentor_id)
                   person_id       = '".$mentor_id."'
                 ";
 #      echo $query;
-      $result = mysql_query($query) or die(mysql_error());
+      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1010,7 +1025,7 @@ function add_mentor($type,$student_id,$mentor_id)
   {
     # find existing committee members for this student
     $committee = find_committee_for_person($student_id);
-    # if new/different - then add them to the student's dissertation    
+    # if new/different - then add them to the student's dissertation
     if (in_array($mentor_id,$committee))
     {
       # skip - already on committee
@@ -1023,7 +1038,7 @@ function add_mentor($type,$student_id,$mentor_id)
                   person_id       = '".$mentor_id."'
                 ";
 #      echo $query;
-      $result = mysql_query($query) or die(mysql_error());
+      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1040,6 +1055,7 @@ function add_mentor($type,$student_id,$mentor_id)
 # -------------------------------------------------------------------------------
 function remove_mentor($type,$student_id,$mentor_id)
 {
+  global $dbh;
   $dissertation = find_dissertation_by_person($student_id);
 
   $student = find_person($student_id);
@@ -1069,7 +1085,7 @@ function remove_mentor($type,$student_id,$mentor_id)
               dissertation_id = '".$dissertation['id']."'
             LIMIT 1
           ";
-      $result = mysql_query($query) or die(mysql_error());
+      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1084,7 +1100,7 @@ function remove_mentor($type,$student_id,$mentor_id)
     $dissertation = find_dissertation_by_person($student_id);
     # find existing committee members for this student
     $committee = find_committee_for_person($student_id);
-    # if found in db, remove them    
+    # if found in db, remove them
     if (!in_array($mentor_id,$committee))
     {
       echo "not on committee for this student";
@@ -1098,7 +1114,7 @@ function remove_mentor($type,$student_id,$mentor_id)
               dissertation_id = '".$dissertation['id']."'
             LIMIT 1
           ";
-      $result = mysql_query($query) or die(mysql_error());
+      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1118,6 +1134,7 @@ function remove_mentor($type,$student_id,$mentor_id)
 # -------------------------------------------------------------------------------
 function find_all_people_for_selectbox($with_dissertation="0")
 {
+  global $dbh;
   if ($with_dissertation == "0")
   {
     $query = "SELECT
@@ -1127,7 +1144,7 @@ function find_all_people_for_selectbox($with_dissertation="0")
               WHERE
                 p.preferred_name_id = n.id
               ORDER BY n.lastname,n.firstname,n.middlename
-            ";    
+            ";
   }
   else
   {
@@ -1142,9 +1159,9 @@ function find_all_people_for_selectbox($with_dissertation="0")
             ";
   }
   // echo $query;
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $people[$line['person_id']] = $line;
   }
 
@@ -1154,10 +1171,11 @@ function find_all_people_for_selectbox($with_dissertation="0")
 # -------------------------------------------------------------------------------
 function merge_two_people($from_id, $into_id)
 {
+  global $dbh;
 
   $from_person = find_person($from_id);
   $into_person = find_person($into_id);
-  
+
 
   $query = "UPDATE advisorships
         SET
@@ -1165,8 +1183,8 @@ function merge_two_people($from_id, $into_id)
         WHERE
           person_id = '".$from_person['id']."'
       ";
-  
-  $result = mysql_query($query) or die(mysql_error());
+
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $query = "UPDATE dissertations
         SET
@@ -1174,8 +1192,8 @@ function merge_two_people($from_id, $into_id)
         WHERE
           person_id = '".$from_person['id']."'
       ";
-  
-  $result = mysql_query($query) or die(mysql_error());
+
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $query = "UPDATE committeeships
         SET
@@ -1183,8 +1201,8 @@ function merge_two_people($from_id, $into_id)
         WHERE
           person_id = '".$from_person['id']."'
       ";
-  
-  $result = mysql_query($query) or die(mysql_error());
+
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $query = "UPDATE urls
         SET
@@ -1192,11 +1210,11 @@ function merge_two_people($from_id, $into_id)
         WHERE
           person_id = '".$from_person['id']."'
       ";
-  
-  $result = mysql_query($query) or die(mysql_error());
+
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   // move each 'from' name to the 'into' person
-  
+
   $query = "UPDATE names
         SET
           person_id = '".$into_person['id']."'
@@ -1204,20 +1222,20 @@ function merge_two_people($from_id, $into_id)
           person_id = '".$from_person['id']."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   // remove any new duplicates in the names table
-  
-  remove_duplicate_names($into_person['id']);     
+
+  remove_duplicate_names($into_person['id']);
 
   // remove 'from' person from the database
-  
+
   $query = "DELETE FROM people
         WHERE
           id = '".$from_person['id']."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   # log it
   mpact_logger("merged two people [".$from_id."] (".$from_person['fullname'].") and [".$into_id."] (".$into_person['fullname'].")");
@@ -1228,15 +1246,16 @@ function merge_two_people($from_id, $into_id)
 # -------------------------------------------------------------------------------
 function find_aliases($person_id)
 {
+  global $dbh;
 
   $query = "SELECT preferred_name_id
         FROM people
         WHERE id = '".$person_id."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     extract($line);
   }
 
@@ -1250,20 +1269,21 @@ function find_aliases($person_id)
           n.person_id = '".$person_id."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $names[$line['id']] = $line;
   }
 
   unset($names[$preferred_name_id]);
-  
+
   return $names;
 }
 
 # -------------------------------------------------------------------------------
 function find_person($person_id)
 {
+  global $dbh;
   $query = "SELECT
         n.firstname, n.middlename,
         n.lastname, n.suffix, p.degree,
@@ -1274,9 +1294,9 @@ function find_person($person_id)
           p.preferred_name_id = n.id AND
           p.id = ".$person_id."
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $person = $line;
     $person['fullname'] = $person['firstname'];
     if ($person['middlename'] != ""){$person['fullname'] .= " ".$person['middlename'];}
@@ -1290,6 +1310,7 @@ function find_person($person_id)
 # -------------------------------------------------------------------------------
 function find_url($url_id)
 {
+  global $dbh;
 
   $url_id = intval($url_id);
   $query = "SELECT
@@ -1299,9 +1320,9 @@ function find_url($url_id)
         WHERE
           u.id = '".$url_id."'
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $url = $line;
   }
 
@@ -1312,6 +1333,7 @@ function find_url($url_id)
 # -------------------------------------------------------------------------------
 function find_urls_by_person($person_id)
 {
+  global $dbh;
 
   $person_id = intval($person_id);
   $query = "SELECT
@@ -1321,10 +1343,10 @@ function find_urls_by_person($person_id)
         WHERE
           u.person_id = '".$person_id."'
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $urls = array();
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $urls[$line['id']] = $line;
   }
 
@@ -1335,6 +1357,7 @@ function find_urls_by_person($person_id)
 # -------------------------------------------------------------------------------
 function find_dissertation($dissertation_id)
 {
+  global $dbh;
 
   $dissertation_id = intval($dissertation_id);
   $query = "SELECT
@@ -1345,10 +1368,10 @@ function find_dissertation($dissertation_id)
         WHERE
           d.id = '".$dissertation_id."'
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $dissertation = array();
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $dissertation = $line;
   }
 
@@ -1358,6 +1381,7 @@ function find_dissertation($dissertation_id)
 # -------------------------------------------------------------------------------
 function find_dissertation_by_person($person_id)
 {
+  global $dbh;
 
   $person_id = intval($person_id);
   $query = "SELECT
@@ -1368,10 +1392,10 @@ function find_dissertation_by_person($person_id)
         WHERE
           d.person_id = '".$person_id."'
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $dissertation = array();
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $dissertation = $line;
   }
 
@@ -1381,6 +1405,7 @@ function find_dissertation_by_person($person_id)
 # -------------------------------------------------------------------------------
 function find_name($name_id)
 {
+  global $dbh;
   $query = "SELECT
         n.firstname, n.middlename,
         n.lastname, n.suffix
@@ -1389,9 +1414,9 @@ function find_name($name_id)
         WHERE
           n.id = ".$name_id."
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $name = $line;
     $name['fullname'] = $name['firstname'];
     if ($name['middlename'] != ""){$name['fullname'] .= " ".$name['middlename'];}
@@ -1405,6 +1430,7 @@ function find_name($name_id)
 # -------------------------------------------------------------------------------
 function find_discipline($discipline_id)
 {
+  global $dbh;
   $discipline_id = intval($discipline_id);
   $query = "SELECT
         d.title, d.description
@@ -1413,9 +1439,9 @@ function find_discipline($discipline_id)
         WHERE
           d.id = ".$discipline_id."
       ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result)) {
+  while ( $line = mysqli_fetch_array($result)) {
     $discipline = $line;
   }
 
@@ -1483,9 +1509,10 @@ function T_score($person)
 # -------------------------------------------------------------------------------
 function find_mpact_score($person,$score_type)
 {
+  global $dbh;
   $query = "SELECT $score_type as score FROM people WHERE id='$person'";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     extract($line);
   }
   return $score;
@@ -1672,7 +1699,7 @@ function advisees_of_group($group)
 }
 
 # -------------------------------------------------------------------------------
-function flattenArray($array) 
+function flattenArray($array)
 {
    $flatArray = array();
    foreach( $array as $subElement ) {
@@ -1687,6 +1714,7 @@ function flattenArray($array)
 # -------------------------------------------------------------------------------
 function calculate_scores($person_id)
 {
+  global $dbh;
   $A_score = count(find_advisorships_under_person($person_id));
   $C_score = count(find_committeeships_under_person($person_id));
   $AC_score = $A_score + $C_score;
@@ -1714,12 +1742,13 @@ function calculate_scores($person_id)
               WHERE
                 id = ".$person_id."
             ";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 }
 
 # -------------------------------------------------------------------------------
 function mpact_scores($passed_person)
 {
+  global $dbh;
   $glossaryterms = find_glossaryterms();
 
   $query = "SELECT
@@ -1729,11 +1758,11 @@ function mpact_scores($passed_person)
               FROM people
               WHERE id = ".$passed_person."
             ";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result)) {
     extract($line);
   }
-  
+
   $mpact['A'] = $a_score;
   $mpact['C'] = $c_score;
   $mpact['AC'] = $ac_score;
@@ -1776,6 +1805,7 @@ function mpact_scores($passed_person)
 # -------------------------------------------------------------------------------
 function find_advisors_for_person($person_id)
 {
+  global $dbh;
 
   // get person's own advisor(s)
 
@@ -1791,9 +1821,9 @@ function find_advisors_for_person($person_id)
           a.dissertation_id = d.id
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
-          
-  while ( $line = mysql_fetch_array($result))
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result))
   {
     $listing[] = $line['person_id'];
   }
@@ -1804,6 +1834,7 @@ function find_advisors_for_person($person_id)
 # -------------------------------------------------------------------------------
 function find_committee_for_person($person_id)
 {
+  global $dbh;
 
   // get person's own committee member(s)
 
@@ -1818,9 +1849,9 @@ function find_committee_for_person($person_id)
           c.dissertation_id = d.id
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
-          
-  while ( $line = mysql_fetch_array($result))
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result))
   {
     $listing[] = $line['person_id'];
   }
@@ -1831,6 +1862,7 @@ function find_committee_for_person($person_id)
 # -------------------------------------------------------------------------------
 function find_advisorships_under_person($person_id)
 {
+  global $dbh;
 
   // get person's advisorships (below)
 
@@ -1847,9 +1879,9 @@ function find_advisorships_under_person($person_id)
           d.completedyear ASC
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
-          
-  while ( $line = mysql_fetch_array($result))
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result))
   {
     $listing[] = $line['person_id'];
   }
@@ -1860,6 +1892,7 @@ function find_advisorships_under_person($person_id)
 # -------------------------------------------------------------------------------
 function find_committeeships_under_person($person_id)
 {
+  global $dbh;
 
   // get person's committeeships (below)
 
@@ -1876,9 +1909,9 @@ function find_committeeships_under_person($person_id)
           d.completedyear
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
-          
-  while ( $line = mysql_fetch_array($result))
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result))
   {
     $listing[] = $line['person_id'];
   }
@@ -1889,6 +1922,7 @@ function find_committeeships_under_person($person_id)
 # -------------------------------------------------------------------------------
 function set_preferred_name($person_id,$name_id)
 {
+  global $dbh;
 
   # delete current family tree of dotgraphs
   delete_associated_dotgraphs($person_id);
@@ -1906,7 +1940,7 @@ function set_preferred_name($person_id,$name_id)
           id = '".$person_id."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
   $after = find_person($person_id);
 
@@ -1917,6 +1951,7 @@ function set_preferred_name($person_id,$name_id)
 # -------------------------------------------------------------------------------
 function generate_profs_at_dept($school_id,$discipline_id)
 {
+  global $dbh;
 
   $dissertations = array();
   $listing = array();
@@ -1933,9 +1968,9 @@ function generate_profs_at_dept($school_id,$discipline_id)
           d.discipline_id = '".$discipline_id."'
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result))
+  while ( $line = mysqli_fetch_array($result))
   {
     $dissertations[] = $line['id'];
   }
@@ -1952,13 +1987,13 @@ function generate_profs_at_dept($school_id,$discipline_id)
     $query .= ") AND
             a.dissertation_id = d.id";
 
-    $result = mysql_query($query) or die(mysql_error());
+    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-    while ( $line = mysql_fetch_array($result))
+    while ( $line = mysqli_fetch_array($result))
     {
       $advisors[$line['person_id']] = $line['person_id'];
     }
-    
+
     // get all committeemembers for these dissertations
 
     $query = "SELECT c.person_id
@@ -1969,9 +2004,9 @@ function generate_profs_at_dept($school_id,$discipline_id)
     $query .= ") AND
             c.dissertation_id = d.id";
 
-    $result = mysql_query($query) or die(mysql_error());
+    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-    while ( $line = mysql_fetch_array($result))
+    while ( $line = mysqli_fetch_array($result))
     {
       $committeemembers[$line['person_id']] = $line['person_id'];
     }
@@ -1990,14 +2025,15 @@ function generate_profs_at_dept($school_id,$discipline_id)
 # -------------------------------------------------------------------------------
 function find_profs_at_dept($school_id,$discipline_id)
 {
+  global $dbh;
   $query = "SELECT professors
               FROM profs_at_dept
               WHERE
                 school_id     = '$school_id' AND
                 discipline_id = '$discipline_id'
             ";
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result))
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result))
   {
     $listing = unserialize($line['professors']);
   }
@@ -2008,6 +2044,7 @@ function find_profs_at_dept($school_id,$discipline_id)
 # -------------------------------------------------------------------------------
 function find_disciplines($school_id=null)
 {
+  global $dbh;
 
   $disciplines = array();
   if ($school_id)
@@ -2033,9 +2070,9 @@ function find_disciplines($school_id=null)
                   title
               ";
   }
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result))
+  while ( $line = mysqli_fetch_array($result))
   {
     $disciplines[$line['id']] = $line['title'];
   }
@@ -2049,12 +2086,13 @@ function find_disciplines($school_id=null)
 # -------------------------------------------------------------------------------
 function is_duplicate_discipline($title)
 {
+  global $dbh;
   $disciplinefound = 0;
 
   $query = "SELECT id FROM disciplines WHERE title = '$title'";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result))
+  while ( $line = mysqli_fetch_array($result))
   {
     $disciplinefound = $line['id'];
   }
@@ -2069,10 +2107,11 @@ function is_duplicate_discipline($title)
 # -------------------------------------------------------------------------------
 function is_empty_discipline($discipline_id)
 {
+  global $dbh;
   $query = "SELECT count(*) as howmany FROM dissertations WHERE discipline_id = $discipline_id";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result))
+  while ( $line = mysqli_fetch_array($result))
   {
     extract($line);
   }
@@ -2087,12 +2126,13 @@ function is_empty_discipline($discipline_id)
 # -------------------------------------------------------------------------------
 function is_duplicate_school($fullname)
 {
+  global $dbh;
   $schoolfound = 0;
 
   $query = "SELECT id FROM schools WHERE fullname = '$fullname'";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result))
+  while ( $line = mysqli_fetch_array($result))
   {
     $schoolfound = $line['id'];
   }
@@ -2107,10 +2147,11 @@ function is_duplicate_school($fullname)
 # -------------------------------------------------------------------------------
 function is_empty_school($school_id)
 {
+  global $dbh;
   $query = "SELECT count(*) as howmany FROM dissertations WHERE school_id = $school_id";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-  while ( $line = mysql_fetch_array($result))
+  while ( $line = mysqli_fetch_array($result))
   {
     extract($line);
   }
@@ -2125,19 +2166,20 @@ function is_empty_school($school_id)
 # -------------------------------------------------------------------------------
 function find_discipline_counts()
 {
-   
+  global $dbh;
+
    // get all discipline counts from the database
 
    $disciplinecounts = array();
-   
+
    $query = "SELECT discipline_id, count(*) as disciplinecount
                FROM dissertations
                GROUP BY discipline_id
             ";
-   
-   $result = mysql_query($query) or die(mysql_error());
 
-   while ( $line = mysql_fetch_array($result))
+   $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+   while ( $line = mysqli_fetch_array($result))
    {
     $disciplinecounts[$line['discipline_id']] = $line['disciplinecount'];
    }
@@ -2151,22 +2193,23 @@ function find_discipline_counts()
 # -------------------------------------------------------------------------------
 function find_discipline_statuses($discipline_id)
 {
+  global $dbh;
 
    // get status counts for this discipline
 
    GLOBAL $statuscodes;
 
    $statuscounts = array();
-   
+
    $query = "SELECT status, count(*) as disciplinecount
                FROM dissertations
                WHERE discipline_id='$discipline_id'
                GROUP BY status
             ";
 
-   $result = mysql_query($query) or die(mysql_error());
+   $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-   while ( $line = mysql_fetch_array($result))
+   while ( $line = mysqli_fetch_array($result))
    {
     $statuscounts[$line['status']] = $line['disciplinecount'];
    }
@@ -2184,19 +2227,20 @@ function find_discipline_statuses($discipline_id)
 # -------------------------------------------------------------------------------
 function find_dept_counts($school_id,$discipline_id)
 {
-   
+  global $dbh;
+
    // get all department counts from the database
 
    $deptcounts = array();
-   
+
    $query = "SELECT discipline_id, count(*) as disciplinecount
                FROM dissertations
                GROUP BY discipline_id
             ";
-   
-   $result = mysql_query($query) or die(mysql_error());
 
-   while ( $line = mysql_fetch_array($result))
+   $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+   while ( $line = mysqli_fetch_array($result))
    {
     $deptcounts[$line['discipline_id']] = $line['disciplinecount'];
    }
@@ -2210,13 +2254,14 @@ function find_dept_counts($school_id,$discipline_id)
 # -------------------------------------------------------------------------------
 function find_dept_statuses($school_id,$discipline_id)
 {
+  global $dbh;
 
    // get status counts for this school in this discipline
 
    GLOBAL $statuscodes;
 
    $statuscounts = array();
-   
+
    $query = "SELECT status, count(*) as disciplinecount
                FROM dissertations
                WHERE
@@ -2225,9 +2270,9 @@ function find_dept_statuses($school_id,$discipline_id)
                GROUP BY status
             ";
 
-   $result = mysql_query($query) or die(mysql_error());
+   $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-   while ( $line = mysql_fetch_array($result))
+   while ( $line = mysqli_fetch_array($result))
    {
     $statuscounts[$line['status']] = $line['disciplinecount'];
    }
@@ -2245,6 +2290,7 @@ function find_dept_statuses($school_id,$discipline_id)
 # -------------------------------------------------------------------------------
 function find_schools($discipline_id=null)
 {
+  global $dbh;
   // get all schools in a discipline (or all disciplines)
   $schools = array();
   if ($discipline_id)
@@ -2270,8 +2316,8 @@ function find_schools($discipline_id=null)
                 ORDER BY fullname
               ";
   }
-  $result = mysql_query($query) or die(mysql_error());
-  while ( $line = mysql_fetch_array($result))
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  while ( $line = mysqli_fetch_array($result))
   {
     $schools[$line['id']] = $line['fullname'];
   }
@@ -2285,19 +2331,20 @@ function find_schools($discipline_id=null)
 # -------------------------------------------------------------------------------
 function find_school_counts()
 {
-   
+  global $dbh;
+
    // get all school dissertation counts from the database
 
    $schoolcounts = array();
-   
+
    $query = "SELECT school_id, count(*) as disscount
                FROM dissertations
                GROUP BY school_id
             ";
-   
-   $result = mysql_query($query) or die(mysql_error());
 
-   while ( $line = mysql_fetch_array($result))
+   $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+   while ( $line = mysqli_fetch_array($result))
    {
     $schoolcounts[$line['school_id']] = $line['disscount'];
    }
@@ -2311,22 +2358,23 @@ function find_school_counts()
 # -------------------------------------------------------------------------------
 function find_school_statuses($school_id)
 {
+  global $dbh;
 
    // get status counts for this school
 
    GLOBAL $statuscodes;
 
    $statuscounts = array();
-   
+
    $query = "SELECT status, count(*) as disscount
                FROM dissertations
                WHERE school_id='$school_id'
                GROUP BY status
             ";
 
-   $result = mysql_query($query) or die(mysql_error());
+   $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-   while ( $line = mysql_fetch_array($result))
+   while ( $line = mysqli_fetch_array($result))
    {
     $statuscounts[$line['status']] = $line['disscount'];
    }
@@ -2345,6 +2393,7 @@ function find_school_statuses($school_id)
 # -------------------------------------------------------------------------------
 function find_persons_school($passed_person)
 {
+  global $dbh;
 
   // get person's degree school
 
@@ -2364,9 +2413,9 @@ function find_persons_school($passed_person)
           d.school_id = s.id
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
-          
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result)) {
     $thisperson['dissertation_id']  = $line['dissertation_id'];
     $thisperson['completedyear']  = $line['completedyear'];
     $thisperson['title']  = $line['title'];
@@ -2385,6 +2434,7 @@ function find_persons_school($passed_person)
 # -------------------------------------------------------------------------------
 function find_school($school_id)
 {
+  global $dbh;
 
   // get school
 
@@ -2397,9 +2447,9 @@ function find_school($school_id)
           s.id = ".$school_id."
       ";
 
-  $result = mysql_query($query) or die(mysql_error());
-          
-  while ( $line = mysql_fetch_array($result)) {
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+  while ( $line = mysqli_fetch_array($result)) {
     $school['country'] = $line['country'];
     $school['fullname'] = $line['fullname'];
   }
@@ -2497,11 +2547,12 @@ function delete_associated_dotgraphs($passed_person)
 # -------------------------------------------------------------------------------
 function mark_record_as_dirty($passed_person)
 {
+  global $dbh;
   # mark database record for this person as dirty
   # a cronjob will pick these up and regenerate their dotgraphs
   # gets around permission issues on the server if necessary
   $query = "UPDATE people SET regenerate_dotgraph = '1' WHERE id = '".$passed_person."'";
-  $result = mysql_query($query) or die(mysql_error());
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 }
 
 # -------------------------------------------------------------------------------
@@ -2674,6 +2725,7 @@ function draw_graph($passed_person)
 # -------------------------------------------------------------------------------
 function draw_tree($passed_person)
 {
+  global $dbh;
         GLOBAL $statuscodes;
         GLOBAL $inspectioncodes;
 
@@ -2697,9 +2749,9 @@ function draw_tree($passed_person)
                   p.preferred_name_id = n.id AND
                   p.id = '".$passed_person."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
-        
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+          while ( $line = mysqli_fetch_array($result)) {
             $thisperson['firstname']  = $line['firstname'];
             $thisperson['middlename'] = $line['middlename'];
             $thisperson['lastname']   = $line['lastname'];
@@ -2984,7 +3036,7 @@ function draw_tree($passed_person)
             }
 
             # EDIT HISTORY
-            
+
             if (is_admin())
             {
               $entries = get_dissertation_history($thisperson['dissertation_id']);
@@ -3105,7 +3157,7 @@ function draw_tree($passed_person)
             echo $printme;
 
           }
-  
+
         }
 
 

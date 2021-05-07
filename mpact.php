@@ -6,7 +6,7 @@
 
 //  Terrell Russell
 //  2005 - 2010
-//  unc@terrellrussell.com 
+//  unc@terrellrussell.com
 
 *************************************************/
 
@@ -92,8 +92,8 @@ if (!isset($_COOKIE['MPACT_userid'])){
 // Check for good cookie (and expired session) - (re)set session values accordingly
 if (isset($_COOKIE['MPACT_userid']) && !isset($_SESSION['MPACT'])){
   $query = "SELECT id, username, fullname FROM users WHERE id='".$_COOKIE['MPACT_userid']."'";
-  $result = mysql_query($query) or die(mysql_error());
-  $line = mysql_fetch_array($result);
+  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $line = mysqli_fetch_array($result);
   $_SESSION['MPACT']['userid'] = $line['id'];
   $_SESSION['MPACT']['username'] = $line['username'];
   $_SESSION['MPACT']['fullname'] = $line['fullname'];
@@ -255,9 +255,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<h3>Edit a Glossary Definition</h3>\n";
 
           $query = "SELECT id, term, definition FROM glossary WHERE id='".$_GET['id']."'";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $results['term'] = $line['term'];
             $results['definition'] = $line['definition'];
           }
@@ -331,48 +331,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         # disciplines
         $query = "SELECT count(*) as disciplinecount FROM disciplines";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<tr><td>Disciplines</td><td align=\"right\">".$disciplinecount."</td></tr>\n";
 
         # schools
         $query = "SELECT count(*) as schoolcount FROM schools";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<tr><td>Schools</td><td align=\"right\">".$schoolcount."</td></tr>\n";
 
         # diss
         $query = "SELECT count(*) as disscount FROM dissertations";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<tr><td>Dissertations</td><td align=\"right\">".$disscount."</td></tr>\n";
 
         # a
         $query = "SELECT count(*) as advisorcount FROM advisorships";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<tr><td>Advisorships</td><td align=\"right\">".$advisorcount."</td></tr>\n";
 
         # c
         $query = "SELECT count(*) as committeeshipscount FROM committeeships";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<tr><td>Committeeships</td><td align=\"right\">".$committeeshipscount."</td></tr>\n";
 
         # full
         $query = "SELECT count(*) as peoplecount FROM people";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<tr><td>People</td><td align=\"right\">".$peoplecount."</td></tr>\n";
@@ -383,24 +383,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<br /><br />\n";
         echo "<p><b>Dissertations by Country:</b></p><br />\n";
         $query = "SELECT count(*) as dissnone FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"\")";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         $query = "SELECT count(*) as dissusa FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"USA\")";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         $query = "SELECT count(*) as disscanada FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"Canada\")";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         $query = "SELECT count(*) as dissother FROM dissertations WHERE school_id IN
           (SELECT id FROM schools WHERE (country != \"\" AND country != \"USA\" AND country != \"Canada\"))";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
         echo "<table border='1'>\n";
@@ -425,10 +425,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<br /><br />\n";
         echo "<p><b>Dissertations by Year:</b></p><br />\n";
         $query = "SELECT completedyear, count(*) as disscount FROM dissertations GROUP BY completedyear";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           $counts[$line['completedyear']] = $line['disscount'];
         }
+        ksort($counts);
         echo "<table cellpadding=1 cellspacing=0>\n";
         echo "<tr>\n";
         foreach ($counts as $one => $two)
@@ -492,7 +493,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>People With Multiple Dissertations (db needs to be edited by hand)</h3>\n";
-          
+
           $query = "SELECT
                 count(d.id) as howmany,
                 d.id, d.person_id, d.completedyear, d.status,
@@ -504,10 +505,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   howmany DESC
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $dissertations = array();
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $dissertations[] = $line;
           }
           $multicount = 0;
@@ -541,7 +542,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>Dissertations from the year 0000</h3>\n";
-          
+
           $query = "SELECT
                 d.id, d.person_id, d.school_id, d.discipline_id, d.completedyear
                 FROM
@@ -549,10 +550,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   d.completedyear = '0000'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $dissertations = array();
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -566,8 +567,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           schools
                         WHERE id = '".$d['school_id']."'
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $schoolname = $line['fullname'];
             }
             # get degree
@@ -576,8 +577,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           people
                         WHERE id = '".$d['person_id']."'
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $degree = $line['degree'];
             }
             $discipline = find_discipline($d['discipline_id']);
@@ -608,7 +609,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>LIS Dissertations Without Title</h3>\n";
-          
+
           $query = "SELECT
                 d.id, d.person_id, d.school_id, d.completedyear
                 FROM
@@ -619,10 +620,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $dissertations = array();
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -656,7 +657,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>LIS Dissertations Without Abstract</h3>\n";
-          
+
           $query = "SELECT
                 d.id, d.person_id, d.school_id, d.completedyear
                 FROM
@@ -667,10 +668,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $dissertations = array();
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -704,7 +705,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>Dissertations Without Title/Abstract</h3>\n";
-          
+
           $query = "SELECT
                 d.id, d.person_id, d.school_id, d.completedyear
                 FROM
@@ -714,10 +715,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $dissertations = array();
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -751,7 +752,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>LIS Dissertations Without Title/Abstract</h3>\n";
-          
+
           $query = "SELECT
                 d.id, d.person_id, d.school_id, d.completedyear
                 FROM
@@ -762,10 +763,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $dissertations = array();
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -795,11 +796,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         ###############################################
         case "lis_profs_unknown_degree":
-      
+
         if (is_admin())
         {
           echo "<h3>LIS Professors with Unknown Degree</h3>\n";
-      
+
           # advisors or committee members with unknown degree,
           # that served on an lis dissertation
 
@@ -811,8 +812,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -826,8 +827,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $advisors[] = $line['person_id'];
             }
             foreach($advisors as $aid){
@@ -846,8 +847,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $committeemembers[] = $line['person_id'];
             }
             foreach($committeemembers as $cid){
@@ -888,11 +889,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         ###############################################
         case "lis_profs_unknowninvestigated":
         case "lis_profs_unknowninvestigated_degree":
-      
+
 #        if (is_admin())
 #        {
           echo "<h3>LIS Professors with Unknown-Investigated Degree</h3>\n";
-      
+
           # advisors or committee members with unknown-investigated degree,
           # that served on an lis dissertation
 
@@ -904,8 +905,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -919,8 +920,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $advisors[] = $line['person_id'];
             }
             foreach($advisors as $aid){
@@ -939,8 +940,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $committeemembers[] = $line['person_id'];
             }
             foreach($committeemembers as $cid){
@@ -995,7 +996,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>LIS Professors without Dissertations</h3>\n";
-        
+
           # advisors or committee members with no dissertation,
           # that served on an lis dissertation
 
@@ -1007,8 +1008,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
           # get advisors for each diss
@@ -1018,8 +1019,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $advisors[] = $line['person_id'];
             }
           }
@@ -1030,8 +1031,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $committeemembers[] = $line['person_id'];
             }
           }
@@ -1045,8 +1046,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                       WHERE
                         person_id IN ($unique_list)
                     ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $listed[] = $line['person_id'];
           }
           $notlisted = array_diff($unique,$listed);
@@ -1089,8 +1090,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -1108,8 +1109,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $did
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
 
               # advisor line
 
@@ -1171,8 +1172,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $did
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
 
               # committeeship line
 
@@ -1260,8 +1261,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     WHERE
                       d.discipline_id = '1'
                     ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $lis_dissertations[] = $line['id'];
             }
             # get advisors for each diss
@@ -1271,8 +1272,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM advisorships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysql_query($query) or die(mysql_error());
-              while ( $line = mysql_fetch_array($result)) {
+              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+              while ( $line = mysqli_fetch_array($result)) {
                 $advisors[] = $line['person_id'];
               }
             }
@@ -1283,8 +1284,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM committeeships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysql_query($query) or die(mysql_error());
-              while ( $line = mysql_fetch_array($result)) {
+              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+              while ( $line = mysqli_fetch_array($result)) {
                 $committeemembers[] = $line['person_id'];
               }
             }
@@ -1300,8 +1301,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           AND
                           discipline_id = '1'
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $listed[] = $line['person_id'];
             }
             $notlisted = array_diff($unique,$listed);
@@ -1345,8 +1346,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     WHERE
                       d.discipline_id = '1'
                     ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $lis_dissertations[] = $line['id'];
             }
             # get advisors for each diss
@@ -1356,8 +1357,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM advisorships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysql_query($query) or die(mysql_error());
-              while ( $line = mysql_fetch_array($result)) {
+              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+              while ( $line = mysqli_fetch_array($result)) {
                 if ($line['howmany'] > 0){$hascomm[] = $id;};
               }
             }
@@ -1368,8 +1369,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM committeeships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysql_query($query) or die(mysql_error());
-              while ( $line = mysql_fetch_array($result)) {
+              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+              while ( $line = mysqli_fetch_array($result)) {
                 if ($line['howmany'] > 0){$hascomm[] = $id;};
               }
             }
@@ -1406,7 +1407,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         if (is_admin())
         {
           echo "<h3>LIS Professors With MPACT</h3>\n";
-        
+
           # advisors or committee members
           # that served on an lis dissertation
 
@@ -1419,11 +1420,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
-          
+
           # get advisors for each diss
           $advisors = array();
           foreach ($lis_dissertations as $id){
@@ -1431,8 +1432,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $advisors[] = $line['person_id'];
             }
           }
@@ -1444,8 +1445,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $committeemembers[] = $line['person_id'];
             }
           }
@@ -1490,11 +1491,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         ###############################################
         case "lis_profs_summary":
-        
+
         if (is_admin())
         {
           echo "<h3>LIS Professors Summary</h3>\n";
-        
+
           # advisors or committee members
           # that served on an lis dissertation
 
@@ -1508,12 +1509,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $lis_dissertations[] = $line['id'];
           }
           echo "<tr><td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">Total LIS Dissertations</a></td><td>".count($lis_dissertations)."</td></tr>\n";
-          
+
           # get advisors for each diss
           $advisors = array();
           foreach ($lis_dissertations as $id){
@@ -1521,8 +1522,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $advisors[] = $line['person_id'];
             }
           }
@@ -1537,8 +1538,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $committeemembers[] = $line['person_id'];
             }
           }
@@ -1564,8 +1565,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                       WHERE
                         person_id IN ($unique_list)
                     ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $known[] = $line['person_id'];
           }
           echo "<tr><td>";
@@ -1583,8 +1584,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         AND
                         discipline_id != 16
                     ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $howmany = $line['howmany'];
           }
           echo "<tr><td> - Subset of ".count($known)." with known discipline:</td><td>";
@@ -1598,8 +1599,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         AND
                         completedyear != 0000
                     ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $howmany = $line['howmany'];
           }
           echo "<tr><td> - Subset of ".count($known)." with known year:</td><td>";
@@ -1613,8 +1614,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         AND
                         completedyear != 107
                     ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $howmany = $line['howmany'];
           }
           echo "<tr><td> - Subset of ".count($known)." with known school:</td><td>";
@@ -1650,10 +1651,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                       d.completedyear ASC,
                       d.school_id ASC
                     ";
-            $result = mysql_query($query) or die(mysql_error());
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
             $schools = array();
             $count = 0;
-            while ( $line = mysql_fetch_array($result)) {
+            while ( $line = mysqli_fetch_array($result)) {
               $dissertation = find_dissertation($line['id']);
               $person = find_person($line['person_id']);
               $schoolinfo = find_persons_school($line['person_id']);
@@ -1707,9 +1708,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     ORDER BY
                       s.fullname
                     ";
-            $result = mysql_query($query) or die(mysql_error());
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
             $schools = array();
-            while ( $line = mysql_fetch_array($result)) {
+            while ( $line = mysqli_fetch_array($result)) {
               $schools[] = $line;
             }
             foreach ($schools as $s)
@@ -1725,11 +1726,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     GROUP BY
                       d.completedyear
                   ";
-              $result = mysql_query($query) or die(mysql_error());
+              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
               print $s['fullname']."|";
               $d = array();
-              while ( $line = mysql_fetch_array($result)) {
+              while ( $line = mysqli_fetch_array($result)) {
                 $d[$s['id']][$line['completedyear']] = $line['yeartotal'];
               }
 
@@ -1784,10 +1785,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     s.id ASC, d.completedyear ASC, n.lastname ASC, n.firstname ASC
                 ";
 
-            $result = mysql_query($query) or die(mysql_error());
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
             $resultcount = 0;
 
-            while ( $line = mysql_fetch_array($result)) {
+            while ( $line = mysqli_fetch_array($result)) {
               $resultcount++;
               extract($line);
               $year_conferred[$person_id] = $completedyear;
@@ -1832,13 +1833,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
             # each dissertation
             $query = "SELECT id, person_id, completedyear, school_id FROM dissertations";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               extract($line);
               $student = find_person($person_id);
               $query2 = "SELECT fullname as schoolname FROM schools WHERE id = '$school_id'";
               $result2 = mysql_query($query2) or die(mysql_error());
-              $line2 = mysql_fetch_array($result2);
+              $line2 = mysqli_fetch_array($result2);
               extract($line2);
               print $student['fullname']."|dissertation|null|$completedyear|$schoolname\n";
               # get advisorships
@@ -2136,10 +2137,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             action_box("Discipline must be empty to edit...",2,$_SERVER['SCRIPT_NAME']."?op=show_disciplines");
           }
           else{
-            
+
             $query = "SELECT title FROM disciplines WHERE id=".$_GET['id'];
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               extract($line);
             }
 
@@ -2220,10 +2221,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             action_box("School must be empty to edit...",2,$_SERVER['SCRIPT_NAME']."?op=show_schools");
           }
           else{
-          
+
             $query = "SELECT fullname, country FROM schools WHERE id=".$_GET['id'];
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               extract($line);
             }
 
@@ -2382,10 +2383,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           if ($_GET['type'] == "C"){echo " checked";}
           echo "> Committee Member\n";
           echo "<br /><br />\n";
-          
+
           echo "Mentor: <br />\n". get_person_link($_GET['id']);
           echo "<br /><br />\n";
-          
+
 
           echo "Student:<br />\n";
           echo "<select name=\"student_id\">\n";
@@ -2640,7 +2641,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             echo "<form id=\"main_mpact\" method=\"post\" action=\"".$_SERVER['SCRIPT_NAME']."\">";
             echo "<input type=\"hidden\" name=\"op\" value=\"add_name\">";
             echo "<input type=\"hidden\" name=\"id\" value=\"".$_GET['id']."\">";
-      
+
 
             echo "<table border=1>";
             echo "<tr><td>First</td><td>Middle</td><td>Last</td><td>Suffix</td></tr>";
@@ -2674,9 +2675,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             {
                not_admin();
             }
-   
+
         break;
-  
+
       ###############################################
       case "edit_name":
 
@@ -2844,7 +2845,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 action_box("Dissertation not found.");
               }
               else{
-                
+
                 $person = find_person($dissertation['person_id']);
 
                 echo "<h3>EDIT DISSERTATION DETAILS</h3>\n";
@@ -2857,7 +2858,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 echo "<p>";
                 echo get_person_link($person['id']);
                 echo "<br />";
-              
+
                 echo "Degree: <select name=\"degree\">\n";
                 foreach ($degree_types as $one)
                 {
@@ -2955,9 +2956,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             echo "<input type=\"hidden\" name=\"op\" value=\"delete_name\">\n";
             echo "<input type=\"hidden\" name=\"id\" value=\"".$_GET['id']."\">\n";
             echo "<input type=\"hidden\" name=\"name_id\" value=\"".$_GET['name']."\">";
-      
+
             echo "<p>";
-            echo "[ ".$person['firstname']." ".$person['middlename']." ".$person['lastname']." ".$person['suffix']." ]<br />";          
+            echo "[ ".$person['firstname']." ".$person['middlename']." ".$person['lastname']." ".$person['suffix']." ]<br />";
             echo "</p>";
 
 
@@ -2980,7 +2981,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         }
 
         break;
-  
+
       ###############################################
       case "set_preferred_name":
 
@@ -3013,7 +3014,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         else
         {
            not_admin();
-        }     
+        }
 
         break;
 
@@ -3180,9 +3181,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   d.id = '$discipline_id'
               ";
 
-          $result = mysql_query($query) or die(mysql_error());
-                  
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
 
@@ -3193,8 +3194,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           echo "Dissertations by Year:<br />\n";
           $query = "SELECT completedyear, count(*) as disscount FROM dissertations WHERE discipline_id='$discipline_id' GROUP BY completedyear";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
           if (count($counts)>0)
@@ -3310,9 +3311,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   s.id = '$school_id'
               ";
 
-          $result = mysql_query($query) or die(mysql_error());
-                  
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
 
@@ -3322,8 +3323,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           echo "Dissertations by Year:<br />\n";
           $query = "SELECT completedyear, count(*) as disscount FROM dissertations WHERE school_id='$school_id' GROUP BY completedyear";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
           $bigyear = max($counts);
@@ -3488,7 +3489,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
           $school_id = $_GET['s'];
           $discipline_id = $_GET['d'];
-          
+
 
           # Show Discipline Name
           $query = "SELECT d.title as disciplinename
@@ -3496,8 +3497,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   d.id = '$discipline_id'
               ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
           # Show School Name
@@ -3506,9 +3507,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   s.id = '$school_id'
               ";
-          $result = mysql_query($query) or die(mysql_error());
-                  
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
 
@@ -3522,7 +3523,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
           # Advisor and Committee Activity
           echo "<h3>Dissertation Activity and MPACT Scores (click table headings to sort)</h3>";
-          
+
           echo "<p>";
           $theprofs = find_profs_at_dept($school_id,$discipline_id);
           if (count($theprofs)>0)
@@ -3533,8 +3534,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             foreach ($theprofs as $prof){$proflist .= "$prof,";}
             $proflist = rtrim($proflist, ",");
             $query .= "$proflist) ORDER BY ac_score DESC";
-            $result = mysql_query($query) or die(mysql_error());
-            while ( $line = mysql_fetch_array($result)) {
+            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+            while ( $line = mysqli_fetch_array($result)) {
               $sortedprofs[] = $line['id'];
             }
             $profcount = 0;
@@ -3543,7 +3544,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               <td>-</td>
               <td>Name</td>
               <td>A</td>
-              <td>C</td>  
+              <td>C</td>
               <td>A+C</td>
               <td>G</td>
               <td>T</td>
@@ -3598,8 +3599,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         discipline_id=$discipline_id
                       GROUP BY
                         completedyear";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
           echo "<table cellpadding=1 cellspacing=0>\n";
@@ -3641,12 +3642,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   d.person_id = p.id AND
                   p.preferred_name_id = n.id
                 ORDER BY
-                  d.completedyear ASC, n.lastname ASC, n.firstname ASC                  
+                  d.completedyear ASC, n.lastname ASC, n.firstname ASC
               ";
 
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
-          while ( $line = mysql_fetch_array($result)) {
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
             $year_conferred[$person_id] = $completedyear;
             $degree_status[$person_id] = $status;
@@ -3670,7 +3671,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         }
 
         break;
-  
+
       ###############################################
       default:
         // oops - not supposed to be here
@@ -3708,8 +3709,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
       // GET ALL DISSERTATIONS IN A HASH
       $disciplines = find_disciplines();
       $query = "SELECT id, person_id, discipline_id FROM dissertations";
-      $result = mysql_query($query) or die(mysql_error());
-      while ( $line = mysql_fetch_array($result)) {
+      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+      while ( $line = mysqli_fetch_array($result)) {
         $graduates[$line['person_id']] = $line['discipline_id'];
       }
 
@@ -3733,10 +3734,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             ORDER BY n.lastname ASC, n.firstname ASC
             ";
 
-      $result = mysql_query($query) or die(mysql_error());
+      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
       $rowcount = 0;
-      while ( $line = mysql_fetch_array($result)) {
+      while ( $line = mysqli_fetch_array($result)) {
         extract($line);
 
         $rowcount++;
@@ -3819,8 +3820,8 @@ else
         $query = "SELECT id, username, fullname FROM users
                     WHERE username = '".addslashes($_POST['username'])."'
                     AND password = '".addslashes($_POST['password'])."'";
-        $result = mysql_query($query) or die(mysql_error());
-        $line = mysql_fetch_array($result);
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $line = mysqli_fetch_array($result);
         if (isset($line['id'])){
           # save cookie info for one week
           setcookie('MPACT_userid',$line['id'],time()+60*60*24*7);
@@ -3850,7 +3851,7 @@ else
               WHERE
                 id = '".$_POST['id']."'
             ";
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         # log it
         mpact_logger("updated glossary [".$_POST['term']." (".$_POST['id'].")] to (".$_POST['definition'].")");
@@ -3865,13 +3866,13 @@ else
 
     ###############################################
     case "merge_confirm":
-        
+
       if (is_admin()){
 
         echo "<form id=\"merge_em\" method=\"post\" action=\"".$_SERVER['SCRIPT_NAME']."\">";
         echo "<input type=\"hidden\" name=\"op\" value=\"merge_doit\">";
         echo "<input type=\"hidden\" name=\"show\" value=\"".$_POST['show']."\">";
-      
+
         foreach ($_POST['mergers'] as $one)
         {
           echo "<table border=\"1\"><tr><td>";
@@ -3879,7 +3880,7 @@ else
           echo draw_tree( $one );
           echo "<input type=\"hidden\" name=\"mergers[]\" value=\"$one\">";
           echo "</td></tr></table>";
-        }       
+        }
 
         echo "<input type=\"submit\" name=\"submit\" value=\"YES, THESE ARE THE SAME PERSON - MERGE THEM NOW\">";
         echo "</form>";
@@ -4031,13 +4032,13 @@ else
         else
         {
            not_admin();
-        }     
+        }
 
         break;
 
     ###############################################
     case "merge_doit":
-    
+
       if (is_admin()){
 
         # delete the family tree's dotgraphs of each person
@@ -4064,11 +4065,11 @@ else
       else
       {
          not_admin();
-      }     
+      }
 
       break;
 
-    
+
     ###############################################
     case "create_discipline":
 
@@ -4085,13 +4086,13 @@ else
         }
         else
         {
-          
+
           # Create Discipline
           $query = "INSERT disciplines
                 SET
                   title   = '".$_POST['title']."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           # Get the just created discipline_id
           $query = "SELECT id as new_discipline_id, title FROM disciplines
@@ -4100,8 +4101,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
           # log it
@@ -4142,7 +4143,7 @@ else
                 WHERE
                   id = '".$_POST['discipline_id']."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           # log it
           mpact_logger("edited discipline[".$_POST['discipline_id']."] (".$_POST['title'].")");
@@ -4183,7 +4184,7 @@ else
                   fullname   = '".$_POST['fullname']."',
                   country   = '".$_POST['country']."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           # Get the just created school_id
           $query = "SELECT id as new_school_id, fullname FROM schools
@@ -4192,8 +4193,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
           # log it
@@ -4235,7 +4236,7 @@ else
                 WHERE
                   id = '".$_POST['school_id']."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           # log it
           mpact_logger("edited school[".$_POST['school_id']."] (".$_POST['fullname'].")");
@@ -4272,7 +4273,7 @@ else
                   lastname    = '".$_POST['lastname']."',
                   suffix      = '".$_POST['suffix']."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           # Get the just created name_id
           $query = "SELECT id as new_name_id FROM names
@@ -4284,8 +4285,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
 
@@ -4295,7 +4296,7 @@ else
                   preferred_name_id = '".$new_name_id."',
                   degree = '".$_POST['degree']."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           # Get the just created person_id
           $query = "SELECT id as new_person_id FROM people
@@ -4304,8 +4305,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysql_query($query) or die(mysql_error());
-          while ( $line = mysql_fetch_array($result)) {
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          while ( $line = mysqli_fetch_array($result)) {
             extract($line);
           }
 
@@ -4316,7 +4317,7 @@ else
                 WHERE
                   id = '".$new_name_id."'
               ";
-          $result = mysql_query($query) or die(mysql_error());
+          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
           $after = find_person($new_person_id);
 
@@ -4402,7 +4403,7 @@ else
 
     ###############################################
     case "add_name":
-    
+
      if (is_admin()){
 
        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
@@ -4418,7 +4419,7 @@ else
                 person_id   = '".$_POST['id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         # get the just created name_id
         $query = "SELECT id as new_name_id FROM names
@@ -4430,11 +4431,11 @@ else
               ORDER BY id DESC
               LIMIT 1
             ";
-        $result = mysql_query($query) or die(mysql_error());
-        while ( $line = mysql_fetch_array($result)) {
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        while ( $line = mysqli_fetch_array($result)) {
           extract($line);
         }
-        
+
         # find that full name from the DB
         $added = find_name($new_name_id);
 
@@ -4446,7 +4447,7 @@ else
      {
         not_admin();
      }
-         
+
      break;
 
     ###############################################
@@ -4457,7 +4458,7 @@ else
         if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
 
         $before = find_name($_POST['name_id']);
-        
+
         $query = "UPDATE names
               SET
                 firstname   = '".$_POST['firstname']."',
@@ -4469,7 +4470,7 @@ else
                 person_id = '".$_POST['id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         $after = find_name($_POST['name_id']);
 
@@ -4505,7 +4506,7 @@ else
                 person_id   = '".$_POST['person_id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Reference URL Added",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']."#urls");
         # log it
@@ -4537,7 +4538,7 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Reference URL Edited",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$url['person_id']."#urls");
         # log it
@@ -4566,7 +4567,7 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Reference URL Deleted",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$url['person_id']."#urls");
         # log it
@@ -4596,7 +4597,7 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Degree Edited",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$person['id']);
         # log it
@@ -4632,14 +4633,14 @@ else
                 abstract            = '".$_POST['abstract']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         $query = "UPDATE people
                   SET degree = '".$_POST['degree']."'
                   WHERE
                     id = '".$_POST['person_id']."'";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Dissertation Created",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']);
         # log it
@@ -4681,14 +4682,14 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         $query = "UPDATE people
                   SET degree = '".$_POST['degree']."'
                   WHERE
                     id = '".$_POST['person_id']."'";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Dissertation Saved",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']);
         # log it
@@ -4751,9 +4752,9 @@ else
 
         if (delete_person($_POST['id']))
         {
-          action_box("Person Deleted",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['id']);          
+          action_box("Person Deleted",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['id']);
         }
-        
+
       }
       else
       {
@@ -4765,7 +4766,7 @@ else
 
     ###############################################
     case "delete_name":
-    
+
       if (is_admin()){
 
         if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
@@ -4779,7 +4780,7 @@ else
               person_id = '".$_POST['id']."'
           ";
 
-        $result = mysql_query($query) or die(mysql_error());
+        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
         action_box("Name Deleted",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['id']);
 
@@ -4796,7 +4797,7 @@ else
 
     ###############################################
     case "edit_school":
-    
+
       break;
 
     ###############################################
