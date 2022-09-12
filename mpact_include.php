@@ -1246,7 +1246,7 @@ function find_aliases($person_id)
         WHERE id = '".$person_id."'
       ";
 
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   extract($line);
 
   $names = array();
@@ -1745,7 +1745,7 @@ function mpact_scores($passed_person)
               FROM people
               WHERE id = ".$passed_person."
             ";
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   extract($line);
 
   $mpact['A'] = $a_score;
@@ -2076,7 +2076,7 @@ function is_empty_discipline($discipline_id)
 {
   global $dbh;
   $query = "SELECT count(*) as howmany FROM dissertations WHERE discipline_id = $discipline_id";
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   extract($line);
 
   if ($howmany > 0){
@@ -2110,7 +2110,7 @@ function is_empty_school($school_id)
 {
   global $dbh;
   $query = "SELECT count(*) as howmany FROM dissertations WHERE school_id = $school_id";
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   extract($line);
 
   if ($howmany > 0){
