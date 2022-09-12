@@ -4519,7 +4519,7 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Reference URL Deleted",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$url['person_id']."#urls");
         # log it
@@ -4732,7 +4732,7 @@ else
               person_id = '".$_POST['id']."'
           ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Name Deleted",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['id']);
 
