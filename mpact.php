@@ -4585,7 +4585,7 @@ else
                 abstract            = '".$_POST['abstract']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         $query = "UPDATE people
                   SET degree = '".$_POST['degree']."'
