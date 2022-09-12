@@ -899,10 +899,10 @@ function delete_person($person_id)
     $before = find_person($person_id);
     # delete all names
     $query = "DELETE FROM names WHERE person_id = '".$person_id."'";
-    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+    $dbh->exec($query);
     # delete the person
     $query = "DELETE FROM people WHERE id = '".$person_id."' LIMIT 1";
-    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+    $dbh->exec($query);
     # log it
     mpact_logger("deleted person[".$person_id."] (".$before['fullname'].")");
     return 1;
@@ -975,7 +975,7 @@ function remove_duplicate_names($person_id)
             id = '".$one."'
         ";
 
-    $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+    $dbh->exec($query);
   }
 
   # log it
@@ -1083,7 +1083,7 @@ function remove_mentor($type,$student_id,$mentor_id)
               dissertation_id = '".$dissertation['id']."'
             LIMIT 1
           ";
-      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+      $dbh->exec($query);
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1112,7 +1112,7 @@ function remove_mentor($type,$student_id,$mentor_id)
               dissertation_id = '".$dissertation['id']."'
             LIMIT 1
           ";
-      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+      $dbh->exec($query);
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1735,7 +1735,7 @@ function calculate_scores($person_id)
               WHERE
                 id = ".$person_id."
             ";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 }
 
 # -------------------------------------------------------------------------------
@@ -1931,7 +1931,7 @@ function set_preferred_name($person_id,$name_id)
           id = '".$person_id."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   $after = find_person($person_id);
 
@@ -2535,7 +2535,7 @@ function mark_record_as_dirty($passed_person)
   # a cronjob will pick these up and regenerate their dotgraphs
   # gets around permission issues on the server if necessary
   $query = "UPDATE people SET regenerate_dotgraph = '1' WHERE id = '".$passed_person."'";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 }
 
 # -------------------------------------------------------------------------------
