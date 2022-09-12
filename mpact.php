@@ -92,8 +92,7 @@ if (!isset($_COOKIE['MPACT_userid'])){
 // Check for good cookie (and expired session) - (re)set session values accordingly
 if (isset($_COOKIE['MPACT_userid']) && !isset($_SESSION['MPACT'])){
   $query = "SELECT id, username, fullname FROM users WHERE id='".$_COOKIE['MPACT_userid']."'";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-  $line = mysqli_fetch_array($result);
+  $line = $dbh->querySingle($query);
   $_SESSION['MPACT']['userid'] = $line['id'];
   $_SESSION['MPACT']['username'] = $line['username'];
   $_SESSION['MPACT']['fullname'] = $line['fullname'];
@@ -3820,8 +3819,7 @@ else
         $query = "SELECT id, username, fullname FROM users
                     WHERE username = '".addslashes($_POST['username'])."'
                     AND password = '".addslashes($_POST['password'])."'";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        $line = mysqli_fetch_array($result);
+        $line = $dbh->querySingle($query);
         if (isset($line['id'])){
           # save cookie info for one week
           setcookie('MPACT_userid',$line['id'],time()+60*60*24*7);
