@@ -49,7 +49,7 @@ function comparePassword( $password, $hashed ){
 function mpact_logger($message,$type="general"){
   global $dbh;
   $ip = ($_SERVER['REMOTE_ADDR'] == "127.0.0.1") ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-  if (!get_magic_quotes_gpc()) {$message = addslashes($message);}
+  $message = addslashes($message);
   $query = "INSERT logs
               SET
               logged_at = datetime('now'),
@@ -610,8 +610,8 @@ function notes_search($q)
 {
   global $dbh;
   $q = trim($q);
-  if (!get_magic_quotes_gpc()) {$q = addslashes($q);}
-  $results = array();
+  $q = addslashes($q);
+  $notesresults = array();
   if (strlen($q) < 2){
     return $results;
   }
