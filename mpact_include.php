@@ -52,7 +52,7 @@ function mpact_logger($message,$type="general"){
   if (!get_magic_quotes_gpc()) {$message = addslashes($message);}
   $query = "INSERT logs
               SET
-              logged_at = now(),
+              logged_at = datetime('now'),
               ip        = '".$ip."',
               user      = '".$_SESSION['MPACT']['username']."',
               type      = '".$type."',
@@ -1725,7 +1725,7 @@ function calculate_scores($person_id)
                 td_score = '$TD_score',
                 fmi_score = '$FMI_score',
                 fme_score = '$FME_score',
-                scores_calculated = now()
+                scores_calculated = datetime('now')
               WHERE
                 id = ".$person_id."
             ";

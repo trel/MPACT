@@ -4444,7 +4444,7 @@ else
               SET
                 url         = '".$_POST['url']."',
                 description = '".$_POST['description']."',
-                updated_at  = now(),
+                updated_at  = datetime('now'),
                 person_id   = '".$_POST['person_id']."'
             ";
 
@@ -4475,7 +4475,7 @@ else
               SET
                 url         = '".$_POST['url']."',
                 description = '".$_POST['description']."',
-                updated_at  = now()
+                updated_at  = datetime('now')
               WHERE
                 id = '".$_POST['id']."'
             ";
