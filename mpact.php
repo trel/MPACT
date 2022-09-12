@@ -3795,7 +3795,7 @@ else
       if (is_admin())
       {
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $query = "UPDATE glossary
               SET
@@ -4026,7 +4026,7 @@ else
     case "create_discipline":
 
       if (is_admin()){
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         if ($_POST['title'] == "")
         {
@@ -4073,7 +4073,7 @@ else
     case "edit_discipline":
 
       if (is_admin()){
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         if ($_POST['title'] == "")
         {
@@ -4113,7 +4113,7 @@ else
     case "create_school":
 
       if (is_admin()){
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $_POST = array_map('trim',$_POST);
 
@@ -4163,7 +4163,7 @@ else
     case "edit_school":
 
       if (is_admin()){
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         if ($_POST['fullname'] == "" || $_POST['country'] == "")
         {
@@ -4205,7 +4205,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         if ($_POST['lastname'] == "")
         {
@@ -4285,7 +4285,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         if (remove_mentor($_POST['mentor_type'],$_POST['student_id'],$_POST['mentor_id']))
         {
@@ -4310,7 +4310,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         add_mentor($_POST['mentor_type'],$_POST['student_id'],$_POST['mentor_id']);
 
@@ -4330,7 +4330,7 @@ else
 
         if (is_admin()){
 
-          if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+          $_POST = array_map('addslashes',$_POST);
 
           add_mentor($_POST['mentor_type'],$_POST['student_id'],$_POST['mentor_id']);
 
@@ -4350,7 +4350,7 @@ else
 
      if (is_admin()){
 
-       if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+       $_POST = array_map('addslashes',$_POST);
 
         $person = find_person($_POST['id']);
 
@@ -4397,7 +4397,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $before = find_name($_POST['name_id']);
 
@@ -4436,7 +4436,7 @@ else
 
      if (is_admin()){
 
-       if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+       $_POST = array_map('addslashes',$_POST);
 
         $person = find_person(intval($_POST['person_id']));
 
@@ -4466,7 +4466,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $url = find_url(intval($_POST['id']));
         $person = find_person($url['person_id']);
@@ -4499,7 +4499,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $url = find_url(intval($_POST['id']));
         $person = find_person($url['person_id']);
@@ -4528,7 +4528,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $person = find_person(intval($_POST['id']));
 
@@ -4558,7 +4558,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $schools = find_schools();
 
@@ -4603,7 +4603,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $disciplines = find_disciplines();
         $schools = find_schools();
@@ -4690,7 +4690,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         if (delete_person($_POST['id']))
         {
@@ -4711,7 +4711,7 @@ else
 
       if (is_admin()){
 
-        if (!get_magic_quotes_gpc()) {$_POST = array_map('addslashes',$_POST);}
+        $_POST = array_map('addslashes',$_POST);
 
         $name = find_name($_POST['name_id']);
         $person = find_person($_POST['id']);
