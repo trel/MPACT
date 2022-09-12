@@ -3813,7 +3813,7 @@ else
               WHERE
                 id = '".$_POST['id']."'
             ";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         # log it
         mpact_logger("updated glossary [".$_POST['term']." (".$_POST['id'].")] to (".$_POST['definition'].")");
@@ -4103,7 +4103,7 @@ else
                 WHERE
                   id = '".$_POST['discipline_id']."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           # log it
           mpact_logger("edited discipline[".$_POST['discipline_id']."] (".$_POST['title'].")");
@@ -4194,7 +4194,7 @@ else
                 WHERE
                   id = '".$_POST['school_id']."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           # log it
           mpact_logger("edited school[".$_POST['school_id']."] (".$_POST['fullname'].")");
@@ -4271,7 +4271,7 @@ else
                 WHERE
                   id = '".$new_name_id."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           $after = find_person($new_person_id);
 
@@ -4422,7 +4422,7 @@ else
                 person_id = '".$_POST['id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         $after = find_name($_POST['name_id']);
 
@@ -4490,7 +4490,7 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Reference URL Edited",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$url['person_id']."#urls");
         # log it
@@ -4549,7 +4549,7 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Degree Edited",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$person['id']);
         # log it
@@ -4592,7 +4592,7 @@ else
                   WHERE
                     id = '".$_POST['person_id']."'";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Dissertation Created",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']);
         # log it
@@ -4634,14 +4634,14 @@ else
                 id = '".$_POST['id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         $query = "UPDATE people
                   SET degree = '".$_POST['degree']."'
                   WHERE
                     id = '".$_POST['person_id']."'";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Dissertation Saved",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']);
         # log it
