@@ -858,10 +858,13 @@ function is_orphan($person_id)
 {
   global $dbh;
   # confirm person exists
-  $query = "SELECT * FROM people WHERE id = '".$person_id."'";
-  $results = $dbh->query($query);
-  while ( $line = $results->fetchArray() ) {
-  if (!$line['id']){echo "not a person";return 0;}
+  $query = "SELECT id FROM people WHERE id = '".$person_id."'";
+  $line = $dbh->querySingle($query);
+  $id = $line;
+  if (is_null($id)){
+      echo "not a person";
+      return 0;
+  }
   # confirm no dissertation
   $query = "SELECT * FROM dissertations WHERE person_id = '".$person_id."'";
   $results = $dbh->query($query);
