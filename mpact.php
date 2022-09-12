@@ -2137,10 +2137,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           else{
 
             $query = "SELECT title FROM disciplines WHERE id=".$_GET['id'];
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
-              extract($line);
-            }
+            $line = $dbh->querySingle($query);
+            extract($line);
 
             echo "<h3>Editing a Discipline</h3>\n";
 
