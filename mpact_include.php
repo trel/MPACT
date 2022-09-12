@@ -1805,7 +1805,6 @@ function find_advisors_for_person($person_id)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $listing[] = $line['person_id'];
   }
 
@@ -1832,7 +1831,6 @@ function find_committee_for_person($person_id)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $listing[] = $line['person_id'];
   }
 
@@ -1861,7 +1859,6 @@ function find_advisorships_under_person($person_id)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $listing[] = $line['person_id'];
   }
 
@@ -1890,7 +1887,6 @@ function find_committeeships_under_person($person_id)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $listing[] = $line['person_id'];
   }
 
@@ -1948,7 +1944,6 @@ function generate_profs_at_dept($school_id,$discipline_id)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $dissertations[] = $line['id'];
   }
 
@@ -1966,7 +1961,6 @@ function generate_profs_at_dept($school_id,$discipline_id)
 
     $results = $dbh->query($query);
     while ( $line = $results->fetchArray() ) {
-    {
       $advisors[$line['person_id']] = $line['person_id'];
     }
 
@@ -1982,7 +1976,6 @@ function generate_profs_at_dept($school_id,$discipline_id)
 
     $results = $dbh->query($query);
     while ( $line = $results->fetchArray() ) {
-    {
       $committeemembers[$line['person_id']] = $line['person_id'];
     }
   }
@@ -2009,7 +2002,6 @@ function find_profs_at_dept($school_id,$discipline_id)
             ";
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $listing = unserialize($line['professors']);
   }
   return $listing;
@@ -2048,7 +2040,6 @@ function find_disciplines($school_id=null)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $disciplines[$line['id']] = $line['title'];
   }
 
@@ -2067,7 +2058,6 @@ function is_duplicate_discipline($title)
   $query = "SELECT id FROM disciplines WHERE title = '$title'";
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $disciplinefound = $line['id'];
   }
 
@@ -2102,7 +2092,6 @@ function is_duplicate_school($fullname)
   $query = "SELECT id FROM schools WHERE fullname = '$fullname'";
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $schoolfound = $line['id'];
   }
 
@@ -2144,7 +2133,6 @@ function find_discipline_counts()
 
    $results = $dbh->query($query);
    while ( $line = $results->fetchArray() ) {
-   {
     $disciplinecounts[$line['discipline_id']] = $line['disciplinecount'];
    }
 
@@ -2173,7 +2161,6 @@ function find_discipline_statuses($discipline_id)
 
    $results = $dbh->query($query);
    while ( $line = $results->fetchArray() ) {
-   {
     $statuscounts[$line['status']] = $line['disciplinecount'];
    }
 
@@ -2203,7 +2190,6 @@ function find_dept_counts($school_id,$discipline_id)
 
    $results = $dbh->query($query);
    while ( $line = $results->fetchArray() ) {
-   {
     $deptcounts[$line['discipline_id']] = $line['disciplinecount'];
    }
 
@@ -2234,7 +2220,6 @@ function find_dept_statuses($school_id,$discipline_id)
 
    $results = $dbh->query($query);
    while ( $line = $results->fetchArray() ) {
-   {
     $statuscounts[$line['status']] = $line['disciplinecount'];
    }
 
@@ -2279,7 +2264,6 @@ function find_schools($discipline_id=null)
   }
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-  {
     $schools[$line['id']] = $line['fullname'];
   }
 
@@ -2305,7 +2289,6 @@ function find_school_counts()
 
    $results = $dbh->query($query);
    while ( $line = $results->fetchArray() ) {
-   {
     $schoolcounts[$line['school_id']] = $line['disscount'];
    }
 
@@ -2334,7 +2317,6 @@ function find_school_statuses($school_id)
 
    $results = $dbh->query($query);
    while ( $line = $results->fetchArray() ) {
-   {
     $statuscounts[$line['status']] = $line['disscount'];
    }
 
