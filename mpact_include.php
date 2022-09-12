@@ -60,7 +60,8 @@ function mpact_logger($message,$type="general"){
               action    = '".$_SERVER['REQUEST_URI']."',
               agent     = '".$_SERVER['HTTP_USER_AGENT']."'
             ";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
+
 }
 
 # -------------------------------------------------------------------------------
@@ -1010,7 +1011,7 @@ function add_mentor($type,$student_id,$mentor_id)
                   person_id       = '".$mentor_id."'
                 ";
 #      echo $query;
-      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+      $dbh->exec($query);
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1038,7 +1039,7 @@ function add_mentor($type,$student_id,$mentor_id)
                   person_id       = '".$mentor_id."'
                 ";
 #      echo $query;
-      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+      $dbh->exec($query);
       # recalculate scores for both
       calculate_scores($student_id);
       calculate_scores($mentor_id);
@@ -1184,7 +1185,7 @@ function merge_two_people($from_id, $into_id)
           person_id = '".$from_person['id']."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   $query = "UPDATE dissertations
         SET
@@ -1193,7 +1194,7 @@ function merge_two_people($from_id, $into_id)
           person_id = '".$from_person['id']."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   $query = "UPDATE committeeships
         SET
@@ -1202,7 +1203,7 @@ function merge_two_people($from_id, $into_id)
           person_id = '".$from_person['id']."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   $query = "UPDATE urls
         SET
@@ -1211,7 +1212,7 @@ function merge_two_people($from_id, $into_id)
           person_id = '".$from_person['id']."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   // move each 'from' name to the 'into' person
 
@@ -1222,7 +1223,7 @@ function merge_two_people($from_id, $into_id)
           person_id = '".$from_person['id']."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   // remove any new duplicates in the names table
 
@@ -1235,7 +1236,7 @@ function merge_two_people($from_id, $into_id)
           id = '".$from_person['id']."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+  $dbh->exec($query);
 
   # log it
   mpact_logger("merged two people [".$from_id."] (".$from_person['fullname'].") and [".$into_id."] (".$into_person['fullname'].")");
