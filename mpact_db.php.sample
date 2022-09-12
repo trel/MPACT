@@ -4,16 +4,6 @@
 
 // copy this file to mpact_db.php and make any necessary changes
 
-// these need to be right or nothing will work
-
-$DB_HOSTNAME = "localhost";     // probably right
-$DB_DATABASE = "mpact";
-$DB_USER     = "root";
-$DB_PASS     = "";
-$DB_SOCKET   = "";
-if ($DB_SOCKET!=""){$DB_HOSTNAME=$DB_HOSTNAME.":".$DB_SOCKET;}
-
-$dbh = mysqli_connect($DB_HOSTNAME,$DB_USER,$DB_PASS,$DB_DATABASE) or
-  die ('Cannot connect to the database: ' . mysqli_connect_error());
+$dbh = new SQLite3('mpact.db');
 
 ?>
