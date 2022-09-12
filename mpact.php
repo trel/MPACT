@@ -3964,7 +3964,7 @@ else
           if ($count < 1)
           {
             echo "<p>\n";
-            echo "There were no results for [".$_POST['qm']."].";
+            echo "There were no results for [".$_POST['qn']."].";
             if (strlen($_POST['qn']) < 2)
             {
               echo "<br /><br />\n";
