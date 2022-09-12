@@ -4044,7 +4044,7 @@ else
                 SET
                   title   = '".$_POST['title']."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           # Get the just created discipline_id
           $query = "SELECT id as new_discipline_id, title FROM disciplines
@@ -4134,7 +4134,7 @@ else
                   fullname   = '".$_POST['fullname']."',
                   country   = '".$_POST['country']."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           # Get the just created school_id
           $query = "SELECT id as new_school_id, fullname FROM schools
@@ -4221,7 +4221,7 @@ else
                   lastname    = '".$_POST['lastname']."',
                   suffix      = '".$_POST['suffix']."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           # Get the just created name_id
           $query = "SELECT id as new_name_id FROM names
@@ -4242,7 +4242,7 @@ else
                   preferred_name_id = '".$new_name_id."',
                   degree = '".$_POST['degree']."'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+          $dbh->exec($query);
 
           # Get the just created person_id
           $query = "SELECT id as new_person_id FROM people
@@ -4363,7 +4363,7 @@ else
                 person_id   = '".$_POST['id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         # get the just created name_id
         $query = "SELECT id as new_name_id FROM names
@@ -4448,7 +4448,7 @@ else
                 person_id   = '".$_POST['person_id']."'
             ";
 
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
+        $dbh->exec($query);
 
         action_box("Reference URL Added",2,$_SERVER['SCRIPT_NAME']."?op=show_tree&id=".$_POST['person_id']."#urls");
         # log it
