@@ -1837,8 +1837,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               extract($line);
               $student = find_person($person_id);
               $query2 = "SELECT fullname as schoolname FROM schools WHERE id = '$school_id'";
-              $result2 = mysql_query($query2) or die(mysql_error());
-              $line2 = mysqli_fetch_array($result2);
+              $line2 = $dbh->querySingle($query2);
               extract($line2);
               print $student['fullname']."|dissertation|null|$completedyear|$schoolname\n";
               # get advisorships
