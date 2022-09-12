@@ -306,17 +306,17 @@ function show_glossary()
   global $dbh;
   $query = "SELECT id, term, definition FROM glossary ORDER BY term ASC";
 
-  $results = array();
+  $allresults = array();
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-    array_push($results,$line);
+    array_push($allresults,$line);
   }
 
   echo "<h3>Glossary</h3>\n";
 
   echo "<p>\n";
 
-  foreach ($results as $one)
+  foreach ($allresults as $one)
   {
     echo "<strong>".$one['term']."</strong>: ";
     echo $one['definition'];
@@ -501,9 +501,9 @@ function people_search($q)
   }
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-    array_push($results,$line['person_id']);
+    array_push($peopleresults,$line['person_id']);
   }
-  return $results;
+  return $peopleresults;
 }
 
 # -------------------------------------------------------------------------------
@@ -600,9 +600,9 @@ function title_abstract_search($q)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-    array_push($results,$line['person_id']);
+    array_push($titleresults,$line['person_id']);
   }
-  return $results;
+  return $titleresults;
 }
 
 # -------------------------------------------------------------------------------
