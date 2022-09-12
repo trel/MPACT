@@ -254,9 +254,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<h3>Edit a Glossary Definition</h3>\n";
 
           $query = "SELECT id, term, definition FROM glossary WHERE id='".$_GET['id']."'";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $results['term'] = $line['term'];
             $results['definition'] = $line['definition'];
           }
@@ -484,10 +483,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   howmany DESC
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
           $dissertations = array();
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $dissertations[] = $line;
           }
           $multicount = 0;
@@ -529,10 +527,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   d.completedyear = '0000'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
           $dissertations = array();
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -546,8 +543,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           schools
                         WHERE id = '".$d['school_id']."'
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $schoolname = $line['fullname'];
             }
             # get degree
@@ -556,8 +553,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           people
                         WHERE id = '".$d['person_id']."'
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $degree = $line['degree'];
             }
             $discipline = find_discipline($d['discipline_id']);
@@ -599,10 +596,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
           $dissertations = array();
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -647,10 +643,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
           $dissertations = array();
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -694,10 +689,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
           $dissertations = array();
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -742,10 +736,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 ORDER BY
                   d.school_id
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
           $dissertations = array();
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $dissertations[] = $line;
           }
           $zerocount = 0;
@@ -791,8 +784,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -806,8 +799,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $advisors[] = $line['person_id'];
             }
             foreach($advisors as $aid){
@@ -826,8 +819,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $committeemembers[] = $line['person_id'];
             }
             foreach($committeemembers as $cid){
@@ -884,8 +877,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -899,8 +892,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $advisors[] = $line['person_id'];
             }
             foreach($advisors as $aid){
@@ -919,8 +912,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $committeemembers[] = $line['person_id'];
             }
             foreach($committeemembers as $cid){
@@ -987,8 +980,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $lis_dissertations[] = $line['id'];
           }
           # get advisors for each diss
@@ -998,8 +991,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $advisors[] = $line['person_id'];
             }
           }
@@ -1010,8 +1003,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $committeemembers[] = $line['person_id'];
             }
           }
@@ -1025,8 +1018,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                       WHERE
                         person_id IN ($unique_list)
                     ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $listed[] = $line['person_id'];
           }
           $notlisted = array_diff($unique,$listed);
@@ -1069,8 +1062,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -1088,8 +1081,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $did
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
 
               # advisor line
 
@@ -1151,8 +1144,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $did
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
 
               # committeeship line
 
@@ -1240,8 +1233,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     WHERE
                       d.discipline_id = '1'
                     ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $lis_dissertations[] = $line['id'];
             }
             # get advisors for each diss
@@ -1251,8 +1244,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM advisorships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-              while ( $line = mysqli_fetch_array($result)) {
+              $results = $dbh->query($query);
+              while ( $line = $results->fetchArray() ) {
                 $advisors[] = $line['person_id'];
               }
             }
@@ -1263,8 +1256,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM committeeships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-              while ( $line = mysqli_fetch_array($result)) {
+              $results = $dbh->query($query);
+              while ( $line = $results->fetchArray() ) {
                 $committeemembers[] = $line['person_id'];
               }
             }
@@ -1280,8 +1273,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           AND
                           discipline_id = '1'
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $listed[] = $line['person_id'];
             }
             $notlisted = array_diff($unique,$listed);
@@ -1325,8 +1318,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     WHERE
                       d.discipline_id = '1'
                     ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $lis_dissertations[] = $line['id'];
             }
             # get advisors for each diss
@@ -1336,8 +1329,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM advisorships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-              while ( $line = mysqli_fetch_array($result)) {
+              $results = $dbh->query($query);
+              while ( $line = $results->fetchArray() ) {
                 if ($line['howmany'] > 0){$hascomm[] = $id;};
               }
             }
@@ -1348,8 +1341,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                           FROM committeeships
                           WHERE dissertation_id = $id
                         ";
-              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-              while ( $line = mysqli_fetch_array($result)) {
+              $results = $dbh->query($query);
+              while ( $line = $results->fetchArray() ) {
                 if ($line['howmany'] > 0){$hascomm[] = $id;};
               }
             }
@@ -1399,8 +1392,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $lis_dissertations[] = $line['id'];
           }
 
@@ -1411,8 +1404,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $advisors[] = $line['person_id'];
             }
           }
@@ -1424,8 +1417,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $committeemembers[] = $line['person_id'];
             }
           }
@@ -1488,8 +1481,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   WHERE
                     d.discipline_id = '1'
                   ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $lis_dissertations[] = $line['id'];
           }
           echo "<tr><td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=lis_allyears\">Total LIS Dissertations</a></td><td>".count($lis_dissertations)."</td></tr>\n";
@@ -1501,8 +1494,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM advisorships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $advisors[] = $line['person_id'];
             }
           }
@@ -1517,8 +1510,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         FROM committeeships
                         WHERE dissertation_id = $id
                       ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $committeemembers[] = $line['person_id'];
             }
           }
@@ -1544,8 +1537,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                       WHERE
                         person_id IN ($unique_list)
                     ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $known[] = $line['person_id'];
           }
           echo "<tr><td>";
@@ -1563,8 +1556,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         AND
                         discipline_id != 16
                     ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $howmany = $line['howmany'];
           }
           echo "<tr><td> - Subset of ".count($known)." with known discipline:</td><td>";
@@ -1578,8 +1571,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         AND
                         completedyear != 0000
                     ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $howmany = $line['howmany'];
           }
           echo "<tr><td> - Subset of ".count($known)." with known year:</td><td>";
@@ -1593,8 +1586,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         AND
                         completedyear != 107
                     ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $howmany = $line['howmany'];
           }
           echo "<tr><td> - Subset of ".count($known)." with known school:</td><td>";
@@ -1630,10 +1623,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                       d.completedyear ASC,
                       d.school_id ASC
                     ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
             $schools = array();
             $count = 0;
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $dissertation = find_dissertation($line['id']);
               $person = find_person($line['person_id']);
               $schoolinfo = find_persons_school($line['person_id']);
@@ -1687,9 +1680,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     ORDER BY
                       s.fullname
                     ";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
             $schools = array();
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $schools[] = $line;
             }
             foreach ($schools as $s)
@@ -1705,11 +1698,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     GROUP BY
                       d.completedyear
                   ";
-              $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
 
               print $s['fullname']."|";
               $d = array();
-              while ( $line = mysqli_fetch_array($result)) {
+              $results = $dbh->query($query);
+              while ( $line = $results->fetchArray() ) {
                 $d[$s['id']][$line['completedyear']] = $line['yeartotal'];
               }
 
@@ -1764,10 +1757,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                     s.id ASC, d.completedyear ASC, n.lastname ASC, n.firstname ASC
                 ";
 
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
             $resultcount = 0;
-
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $resultcount++;
               extract($line);
               $year_conferred[$person_id] = $completedyear;
@@ -1812,8 +1804,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
             # each dissertation
             $query = "SELECT id, person_id, completedyear, school_id FROM dissertations";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               extract($line);
               $student = find_person($person_id);
               $query2 = "SELECT fullname as schoolname FROM schools WHERE id = '$school_id'";
@@ -3165,8 +3157,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           echo "Dissertations by Year:<br />\n";
           $query = "SELECT completedyear, count(*) as disscount FROM dissertations WHERE discipline_id='$discipline_id' GROUP BY completedyear";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
           if (count($counts)>0)
@@ -3291,8 +3283,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "<p>\n";
           echo "Dissertations by Year:<br />\n";
           $query = "SELECT completedyear, count(*) as disscount FROM dissertations WHERE school_id='$school_id' GROUP BY completedyear";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
           $bigyear = max($counts);
@@ -3497,8 +3489,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             foreach ($theprofs as $prof){$proflist .= "$prof,";}
             $proflist = rtrim($proflist, ",");
             $query .= "$proflist) ORDER BY ac_score DESC";
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
+            $results = $dbh->query($query);
+            while ( $line = $results->fetchArray() ) {
               $sortedprofs[] = $line['id'];
             }
             $profcount = 0;
@@ -3562,8 +3554,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                         discipline_id=$discipline_id
                       GROUP BY
                         completedyear";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
           echo "<table cellpadding=1 cellspacing=0>\n";
@@ -3608,9 +3600,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   d.completedyear ASC, n.lastname ASC, n.firstname ASC
               ";
 
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-          while ( $line = mysqli_fetch_array($result)) {
+          $results = $dbh->query($query);
+          while ( $line = $results->fetchArray() ) {
             extract($line);
             $year_conferred[$person_id] = $completedyear;
             $degree_status[$person_id] = $status;
@@ -3672,8 +3663,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
       // GET ALL DISSERTATIONS IN A HASH
       $disciplines = find_disciplines();
       $query = "SELECT id, person_id, discipline_id FROM dissertations";
-      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-      while ( $line = mysqli_fetch_array($result)) {
+      $results = $dbh->query($query);
+      while ( $line = $results->fetchArray() ) {
         $graduates[$line['person_id']] = $line['discipline_id'];
       }
 
@@ -3697,10 +3688,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
             ORDER BY n.lastname ASC, n.firstname ASC
             ";
 
-      $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
       $rowcount = 0;
-      while ( $line = mysqli_fetch_array($result)) {
+      $results = $dbh->query($query);
+      while ( $line = $results->fetchArray() ) {
         extract($line);
 
         $rowcount++;
