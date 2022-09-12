@@ -3147,7 +3147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   d.id = '$discipline_id'
               ";
 
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
 
           echo "<h2>$disciplinename</h2>";
@@ -3274,7 +3274,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   s.id = '$school_id'
               ";
 
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
 
           echo "<h2>$schoolname ($country)</h2>";
@@ -3457,7 +3457,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   d.id = '$discipline_id'
               ";
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
           # Show School Name
           $query = "SELECT s.fullname as schoolname, s.country
@@ -3465,7 +3465,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   s.id = '$school_id'
               ";
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
 
           echo "
@@ -3773,7 +3773,7 @@ else
         $query = "SELECT id, username, fullname FROM users
                     WHERE username = '".addslashes($_POST['username'])."'
                     AND password = '".addslashes($_POST['password'])."'";
-        $line = $dbh->querySingle($query);
+        $line = $dbh->querySingle($query, true);
         if (isset($line['id'])){
           # save cookie info for one week
           setcookie('MPACT_userid',$line['id'],time()+60*60*24*7);
