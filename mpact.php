@@ -331,37 +331,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         # disciplines
         $query = "SELECT count(*) as disciplinecount FROM disciplines";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $disciplinecount = $line;
         echo "<tr><td>Disciplines</td><td align=\"right\">".$disciplinecount."</td></tr>\n";
 
         # schools
         $query = "SELECT count(*) as schoolcount FROM schools";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $schoolcount = $line;
         echo "<tr><td>Schools</td><td align=\"right\">".$schoolcount."</td></tr>\n";
 
         # diss
         $query = "SELECT count(*) as disscount FROM dissertations";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $disscount = $line;
         echo "<tr><td>Dissertations</td><td align=\"right\">".$disscount."</td></tr>\n";
 
         # a
         $query = "SELECT count(*) as advisorcount FROM advisorships";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $advisorcount = $line;
         echo "<tr><td>Advisorships</td><td align=\"right\">".$advisorcount."</td></tr>\n";
 
         # c
         $query = "SELECT count(*) as committeeshipscount FROM committeeships";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $committeeshipscount = $line;
         echo "<tr><td>Committeeships</td><td align=\"right\">".$committeeshipscount."</td></tr>\n";
 
         # full
         $query = "SELECT count(*) as peoplecount FROM people";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $peoplecount = $line;
         echo "<tr><td>People</td><td align=\"right\">".$peoplecount."</td></tr>\n";
         echo "</table>\n";
 
@@ -371,17 +371,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<p><b>Dissertations by Country:</b></p><br />\n";
         $query = "SELECT count(*) as dissnone FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"\")";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $dissnone = $line;
         $query = "SELECT count(*) as dissusa FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"USA\")";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $dissusa = $line;
         $query = "SELECT count(*) as disscanada FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"Canada\")";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $disscanada = $line;
         $query = "SELECT count(*) as dissother FROM dissertations WHERE school_id IN
           (SELECT id FROM schools WHERE (country != \"\" AND country != \"USA\" AND country != \"Canada\"))";
         $line = $dbh->querySingle($query);
-        extract($line);
+        $dissother = $line;
         echo "<table border='1'>\n";
         echo "<tr><td>USA</td><td align=\"right\">".$dissusa."</td>
                   <td align=\"right\">".sprintf("%.2f",100*$dissusa/$disscount)."%</td>
