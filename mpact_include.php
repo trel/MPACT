@@ -401,8 +401,8 @@ function people_search($q)
 {
   global $dbh;
   $q = trim($q);
-  if (!get_magic_quotes_gpc()) {$q = addslashes($q);}
-  $results = array();
+  $q = addslashes($q);
+  $peopleresults = array();
   if (strlen($q) < 2){
     return $results;
   }
@@ -511,8 +511,8 @@ function title_abstract_search($q)
 {
   global $dbh;
   $q = trim($q);
-  if (!get_magic_quotes_gpc()) {$q = addslashes($q);}
-  $results = array();
+  $q = addslashes($q);
+  $titleresults = array();
   if (strlen($q) < 2){
     return $results;
   }
