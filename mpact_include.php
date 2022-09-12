@@ -928,7 +928,7 @@ function remove_duplicate_names($person_id)
         WHERE id = '".$person_id."'
       ";
 
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   extract($line);
 
   // get the full preferred_name
@@ -1500,7 +1500,7 @@ function find_mpact_score($person,$score_type)
 {
   global $dbh;
   $query = "SELECT $score_type as score FROM people WHERE id='$person'";
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   extract($line);
   return $score;
 }
