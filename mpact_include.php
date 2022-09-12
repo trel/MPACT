@@ -404,7 +404,7 @@ function people_search($q)
   $q = addslashes($q);
   $peopleresults = array();
   if (strlen($q) < 2){
-    return $results;
+    return $peopleresults;
   }
 
   $pieces = explode(" ",$q);
@@ -514,7 +514,7 @@ function title_abstract_search($q)
   $q = addslashes($q);
   $titleresults = array();
   if (strlen($q) < 2){
-    return $results;
+    return $titleresults;
   }
 
   $pieces = explode(" ",$q);
@@ -613,7 +613,7 @@ function notes_search($q)
   $q = addslashes($q);
   $notesresults = array();
   if (strlen($q) < 2){
-    return $results;
+    return $notesresults;
   }
 
   $pieces = explode(" ",$q);
@@ -693,9 +693,9 @@ function notes_search($q)
 
   $results = $dbh->query($query);
   while ( $line = $results->fetchArray() ) {
-    array_push($results,$line['person_id']);
+    array_push($notesresults,$line['person_id']);
   }
-  return $results;
+  return $notesresults;
 }
 
 # -------------------------------------------------------------------------------
