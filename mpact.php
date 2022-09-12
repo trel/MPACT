@@ -92,7 +92,7 @@ if (!isset($_COOKIE['MPACT_userid'])){
 // Check for good cookie (and expired session) - (re)set session values accordingly
 if (isset($_COOKIE['MPACT_userid']) && !isset($_SESSION['MPACT'])){
   $query = "SELECT id, username, fullname FROM users WHERE id='".$_COOKIE['MPACT_userid']."'";
-  $line = $dbh->querySingle($query);
+  $line = $dbh->querySingle($query, true);
   $_SESSION['MPACT']['userid'] = $line['id'];
   $_SESSION['MPACT']['username'] = $line['username'];
   $_SESSION['MPACT']['fullname'] = $line['fullname'];
@@ -329,38 +329,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         # disciplines
         $query = "SELECT count(*) as disciplinecount FROM disciplines";
-        $line = $dbh->querySingle($query);
-        $disciplinecount = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<tr><td>Disciplines</td><td align=\"right\">".$disciplinecount."</td></tr>\n";
 
         # schools
         $query = "SELECT count(*) as schoolcount FROM schools";
-        $line = $dbh->querySingle($query);
-        $schoolcount = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<tr><td>Schools</td><td align=\"right\">".$schoolcount."</td></tr>\n";
 
         # diss
         $query = "SELECT count(*) as disscount FROM dissertations";
-        $line = $dbh->querySingle($query);
-        $disscount = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<tr><td>Dissertations</td><td align=\"right\">".$disscount."</td></tr>\n";
 
         # a
         $query = "SELECT count(*) as advisorcount FROM advisorships";
-        $line = $dbh->querySingle($query);
-        $advisorcount = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<tr><td>Advisorships</td><td align=\"right\">".$advisorcount."</td></tr>\n";
 
         # c
         $query = "SELECT count(*) as committeeshipscount FROM committeeships";
-        $line = $dbh->querySingle($query);
-        $committeeshipscount = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<tr><td>Committeeships</td><td align=\"right\">".$committeeshipscount."</td></tr>\n";
 
         # full
         $query = "SELECT count(*) as peoplecount FROM people";
-        $line = $dbh->querySingle($query);
-        $peoplecount = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<tr><td>People</td><td align=\"right\">".$peoplecount."</td></tr>\n";
         echo "</table>\n";
 
@@ -369,18 +369,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<br /><br />\n";
         echo "<p><b>Dissertations by Country:</b></p><br />\n";
         $query = "SELECT count(*) as dissnone FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"\")";
-        $line = $dbh->querySingle($query);
-        $dissnone = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         $query = "SELECT count(*) as dissusa FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"USA\")";
-        $line = $dbh->querySingle($query);
-        $dissusa = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         $query = "SELECT count(*) as disscanada FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"Canada\")";
-        $line = $dbh->querySingle($query);
-        $disscanada = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         $query = "SELECT count(*) as dissother FROM dissertations WHERE school_id IN
           (SELECT id FROM schools WHERE (country != \"\" AND country != \"USA\" AND country != \"Canada\"))";
-        $line = $dbh->querySingle($query);
-        $dissother = $line;
+        $line = $dbh->querySingle($query, true);
+        extract($line);
         echo "<table border='1'>\n";
         echo "<tr><td>USA</td><td align=\"right\">".$dissusa."</td>
                   <td align=\"right\">".sprintf("%.2f",100*$dissusa/$disscount)."%</td>
@@ -1809,7 +1809,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
               extract($line);
               $student = find_person($person_id);
               $query2 = "SELECT fullname as schoolname FROM schools WHERE id = '$school_id'";
-              $line2 = $dbh->querySingle($query2);
+              $line2 = $dbh->querySingle($query2, true);
               extract($line2);
               print $student['fullname']."|dissertation|null|$completedyear|$schoolname\n";
               # get advisorships
@@ -2109,7 +2109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           else{
 
             $query = "SELECT title FROM disciplines WHERE id=".$_GET['id'];
-            $line = $dbh->querySingle($query);
+            $line = $dbh->querySingle($query, true);
             extract($line);
 
             echo "<h3>Editing a Discipline</h3>\n";
@@ -2191,7 +2191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           else{
 
             $query = "SELECT fullname, country FROM schools WHERE id=".$_GET['id'];
-            $line = $dbh->querySingle($query);
+            $line = $dbh->querySingle($query, true);
             extract($line);
 
             echo "<h3>Editing a School</h3>\n";
@@ -4053,7 +4053,7 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
           # log it
           mpact_logger("created discipline[".$new_discipline_id."] (".$title.")");
@@ -4143,7 +4143,7 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
           # log it
           mpact_logger("created school[".$new_school_id."] (".$fullname.")");
@@ -4233,7 +4233,7 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
 
           # Create Person with new_name_id
@@ -4251,7 +4251,7 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $line = $dbh->querySingle($query);
+          $line = $dbh->querySingle($query, true);
           extract($line);
 
           # Sync them together with new_person_id
@@ -4375,7 +4375,7 @@ else
               ORDER BY id DESC
               LIMIT 1
             ";
-        $line = $dbh->querySingle($query);
+        $line = $dbh->querySingle($query, true);
         extract($line);
 
         # find that full name from the DB
