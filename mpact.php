@@ -404,8 +404,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<br /><br />\n";
         echo "<p><b>Dissertations by Year:</b></p><br />\n";
         $query = "SELECT completedyear, count(*) as disscount FROM dissertations GROUP BY completedyear";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
+        $results = $dbh->query($query);
+        while ( $line = $results->fetchArray() ) {
           $counts[$line['completedyear']] = $line['disscount'];
         }
         ksort($counts);
