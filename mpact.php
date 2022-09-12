@@ -330,50 +330,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
         # disciplines
         $query = "SELECT count(*) as disciplinecount FROM disciplines";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<tr><td>Disciplines</td><td align=\"right\">".$disciplinecount."</td></tr>\n";
 
         # schools
         $query = "SELECT count(*) as schoolcount FROM schools";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<tr><td>Schools</td><td align=\"right\">".$schoolcount."</td></tr>\n";
 
         # diss
         $query = "SELECT count(*) as disscount FROM dissertations";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<tr><td>Dissertations</td><td align=\"right\">".$disscount."</td></tr>\n";
 
         # a
         $query = "SELECT count(*) as advisorcount FROM advisorships";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<tr><td>Advisorships</td><td align=\"right\">".$advisorcount."</td></tr>\n";
 
         # c
         $query = "SELECT count(*) as committeeshipscount FROM committeeships";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<tr><td>Committeeships</td><td align=\"right\">".$committeeshipscount."</td></tr>\n";
 
         # full
         $query = "SELECT count(*) as peoplecount FROM people";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<tr><td>People</td><td align=\"right\">".$peoplecount."</td></tr>\n";
         echo "</table>\n";
 
@@ -382,26 +370,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "<br /><br />\n";
         echo "<p><b>Dissertations by Country:</b></p><br />\n";
         $query = "SELECT count(*) as dissnone FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"\")";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         $query = "SELECT count(*) as dissusa FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"USA\")";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         $query = "SELECT count(*) as disscanada FROM dissertations WHERE school_id IN (SELECT id FROM schools WHERE country = \"Canada\")";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         $query = "SELECT count(*) as dissother FROM dissertations WHERE school_id IN
           (SELECT id FROM schools WHERE (country != \"\" AND country != \"USA\" AND country != \"Canada\"))";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
         echo "<table border='1'>\n";
         echo "<tr><td>USA</td><td align=\"right\">".$dissusa."</td>
                   <td align=\"right\">".sprintf("%.2f",100*$dissusa/$disscount)."%</td>
@@ -2219,10 +2199,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           else{
 
             $query = "SELECT fullname, country FROM schools WHERE id=".$_GET['id'];
-            $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-            while ( $line = mysqli_fetch_array($result)) {
-              extract($line);
-            }
+            $line = $dbh->querySingle($query);
+            extract($line);
 
             echo "<h3>Editing a School</h3>\n";
 
@@ -3177,11 +3155,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   d.id = '$discipline_id'
               ";
 
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
 
           echo "<h2>$disciplinename</h2>";
 
@@ -3307,11 +3282,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                   s.id = '$school_id'
               ";
 
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
 
           echo "<h2>$schoolname ($country)</h2>";
 
@@ -3493,21 +3465,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
                 WHERE
                   d.id = '$discipline_id'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
           # Show School Name
           $query = "SELECT s.fullname as schoolname, s.country
                 FROM schools s
                 WHERE
                   s.id = '$school_id'
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
 
           echo "
           <h2>
@@ -4096,10 +4063,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
           # log it
           mpact_logger("created discipline[".$new_discipline_id."] (".$title.")");
 
@@ -4188,10 +4153,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
           # log it
           mpact_logger("created school[".$new_school_id."] (".$fullname.")");
 
@@ -4280,10 +4243,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
 
           # Create Person with new_name_id
           $query = "INSERT people
@@ -4300,10 +4261,8 @@ else
                 ORDER BY id DESC
                 LIMIT 1
               ";
-          $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-          while ( $line = mysqli_fetch_array($result)) {
-            extract($line);
-          }
+          $line = $dbh->querySingle($query);
+          extract($line);
 
           # Sync them together with new_person_id
           $query = "UPDATE names
@@ -4426,10 +4385,8 @@ else
               ORDER BY id DESC
               LIMIT 1
             ";
-        $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-        while ( $line = mysqli_fetch_array($result)) {
-          extract($line);
-        }
+        $line = $dbh->querySingle($query);
+        extract($line);
 
         # find that full name from the DB
         $added = find_name($new_name_id);
