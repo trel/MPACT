@@ -930,11 +930,8 @@ function remove_duplicate_names($person_id)
         WHERE id = '".$person_id."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-  while ( $line = mysqli_fetch_array($result)) {
-    extract($line);
-  }
+  $line = $dbh->querySingle($query);
+  extract($line);
 
   // get the full preferred_name
   $query = "SELECT * FROM names
@@ -1254,11 +1251,8 @@ function find_aliases($person_id)
         WHERE id = '".$person_id."'
       ";
 
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-  while ( $line = mysqli_fetch_array($result)) {
-    extract($line);
-  }
+  $line = $dbh->querySingle($query);
+  extract($line);
 
   $names = array();
   $query = "SELECT
@@ -1512,10 +1506,8 @@ function find_mpact_score($person,$score_type)
 {
   global $dbh;
   $query = "SELECT $score_type as score FROM people WHERE id='$person'";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-  while ( $line = mysqli_fetch_array($result)) {
-    extract($line);
-  }
+  $line = $dbh->querySingle($query);
+  extract($line);
   return $score;
 }
 
@@ -1759,10 +1751,8 @@ function mpact_scores($passed_person)
               FROM people
               WHERE id = ".$passed_person."
             ";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-  while ( $line = mysqli_fetch_array($result)) {
-    extract($line);
-  }
+  $line = $dbh->querySingle($query);
+  extract($line);
 
   $mpact['A'] = $a_score;
   $mpact['C'] = $c_score;
@@ -2110,12 +2100,8 @@ function is_empty_discipline($discipline_id)
 {
   global $dbh;
   $query = "SELECT count(*) as howmany FROM dissertations WHERE discipline_id = $discipline_id";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-  while ( $line = mysqli_fetch_array($result))
-  {
-    extract($line);
-  }
+  $line = $dbh->querySingle($query);
+  extract($line);
 
   if ($howmany > 0){
     return false;
@@ -2150,12 +2136,8 @@ function is_empty_school($school_id)
 {
   global $dbh;
   $query = "SELECT count(*) as howmany FROM dissertations WHERE school_id = $school_id";
-  $result = mysqli_query($dbh, $query) or die(mysqli_error($dbh));
-
-  while ( $line = mysqli_fetch_array($result))
-  {
-    extract($line);
-  }
+  $line = $dbh->querySingle($query);
+  extract($line);
 
   if ($howmany > 0){
     return false;
