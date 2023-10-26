@@ -3086,8 +3086,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         echo "</tr>";
         foreach ($disciplines as $one => $two)
         {
+          $thecount = $disciplinecounts[$one] ?? 0;
           echo "<tr>";
-          echo "<td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_discipline&id=$one\">$two</a> (".intval($disciplinecounts[$one]).")</td>";
+          echo "<td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_discipline&id=$one\">$two</a> (".intval($thecount).")</td>";
           $statuscounts = find_discipline_statuses($one);
           foreach (range(0,4) as $three)
           {
