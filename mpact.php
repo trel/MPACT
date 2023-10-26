@@ -3399,12 +3399,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         foreach ($schools as $one => $two)
         {
           echo "<tr>";
-          echo "<td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_school&id=$one\">$two</a> (".intval($schoolcounts[$one]).")</td>";
+          $thecount = $schoolcounts[$one] ?? 0;
+          echo "<td><a href=\"".$_SERVER['SCRIPT_NAME']."?op=show_school&id=$one\">$two</a> (".intval($thecount).")</td>";
           $statuscounts = find_school_statuses($one);
           foreach (range(0,4) as $three)
           {
             $statustotals[$three] += $statuscounts[$three];
-            if (intval($schoolcounts[$one]) == 0){
+            if (intval($thecount) == 0){
               $fraction = 0;
             }
             else{
