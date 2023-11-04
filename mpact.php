@@ -3495,7 +3495,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 
           echo "<p>";
           $theprofs = find_profs_at_dept($school_id,$discipline_id);
-          if (count($theprofs)>0)
+          if (strlen($theprofs) > 0)
           {
             $sortedprofs = array();
             $proflist = "";
