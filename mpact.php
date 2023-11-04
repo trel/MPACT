@@ -3864,7 +3864,7 @@ else
         $count++;
         $schoolinfo = find_persons_school($person_id);
         echo "$count. ".get_person_link($person_id);
-        if ($schoolinfo['completedyear'])
+        if (isset($schoolinfo['completedyear']))
         {
           echo " - ".$schoolinfo['school']." (".$schoolinfo['completedyear'].")";
         }
