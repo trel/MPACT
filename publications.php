@@ -48,7 +48,7 @@ xhtml_web_header();
    <h1>Related/Derivative Work</h1>
       <ul>
          <li>
-           <p><strong>Yong-Mi Kim</strong>. <a href="http://www.asis.org/Conferences/AM07/posters/79.html">A Preliminary Social Network Analysis of MPACT</a>. Poster. ASIS&T 2007.  Milwaukee, WI.</p>
+           <p><strong>Yong-Mi Kim</strong>. <a href="https://doi.org/10.1002/meet.1450440379">A Preliminary Social Network Analysis of MPACT</a>. Poster. ASIS&T 2007.  Milwaukee, WI.</p>
            <p><strong>Abstract:</strong> A preliminary social network analysis of the MPACT dataset is presented. The current MPACT measures only take into account direct advising or committee relationships. But a mentor may also have indirect impact in the productivity of a mentor's direct mentees. Proximity prestige is examined as one such measure. Visualization of mentoring networks can also uncover different facets of mentoring impact. This short paper presents work currently in progress.</p>
          </li>
       </ul>
