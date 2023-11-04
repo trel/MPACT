@@ -3285,10 +3285,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "Dissertations by Year:<br />\n";
           $query = "SELECT completedyear, count(*) as disscount FROM dissertations WHERE school_id='$school_id' GROUP BY completedyear";
           $results = $dbh->query($query);
+          $counts = [];
           while ( $line = $results->fetchArray() ) {
             $counts[$line['completedyear']] = $line['disscount'];
           }
-          $bigyear = max($counts);
+          if (sizeof($counts) > 0){
+            $bigyear = max($counts);
+          }
+          else {
+            $bigyear = 0;
+          }
           echo "<table cellpadding=1 cellspacing=0>\n";
           echo "<tr>\n";
           foreach ($counts as $one => $two)
@@ -3353,7 +3359,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
           echo "</td>";
           foreach (range(0,4) as $three)
           {
-            $fraction = 100*$statustotals[$three]/array_sum($statustotals);
+            $the_array_sum = array_sum($statustotals);
+            if ($the_array_sum != 0){
+                $fraction = 100*$statustotals[$three]/$the_array_sum;
+            }
+            else{
+                $fraction = 0;
+            }
             echo "<td width='150'>".$statustotals[$three];
             if ($fraction != 0)
             {
