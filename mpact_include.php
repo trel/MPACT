@@ -2423,26 +2423,14 @@ function get_environment_info()
     $host_info['dotfiletype'] = "png";
     $host_info['dotfontface'] = "Times-Roman";
   }
-  else if ($hostname == "trel.dyndns.org")
-  {
-    # my local development machine
-    $host_info['hostname']    = "home";
-    $host_info['ownername']   = "trel";
-    $host_info['dotlocation'] = "/sw/bin/dot";
-    $host_info['appdir']      = "/Library/WebServer/Documents/MPACTlocal/app";
-    $host_info['webdir']      = "http://trel.dyndns.org:9000/mpactlocal/app";
-    $host_info['dotcachedir'] = "dotgraphs";
-    $host_info['dotfiletype'] = "png";
-    $host_info['dotfontface'] = "cour";
-  }
-  else if ($hostname == "localhost.com" || $hostname == "trelpancake")
+  else if ($hostname == "localhost")
   {
     # my laptop
     $host_info['hostname']    = "laptop";
     $host_info['ownername']   = "trel";
-    $host_info['dotlocation'] = "/opt/local/bin/dot";
-    $host_info['appdir']      = "/Users/trel/Sites/MPACT";
-    $host_info['webdir']      = "http://localhost.com/~trel/MPACT";
+    $host_info['dotlocation'] = "/opt/homebrew/bin/dot";
+    $host_info['appdir']      = "/Users/tgr/dev/MPACT";
+    $host_info['webdir']      = "http://localhost:8000";
     $host_info['dotcachedir'] = "dotgraphs";
     $host_info['dotfiletype'] = "png";
     $host_info['dotfontface'] = "cour";
