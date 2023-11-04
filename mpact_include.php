@@ -2703,11 +2703,11 @@ function draw_tree($passed_person)
           }
 
           $schoolinfo = find_persons_school($passed_person);
-          $thisperson['dissertation_id'] = $schoolinfo['dissertation_id'];
-          $thisperson['completedyear'] = $schoolinfo['completedyear'];
-          $thisperson['country'] = $schoolinfo['country'];
-          $thisperson['school'] = $schoolinfo['school'];
-          $thisperson['schoolid'] = $schoolinfo['schoolid'];
+          $thisperson['dissertation_id'] = $schoolinfo['dissertation_id'] ?? "";
+          $thisperson['completedyear'] = $schoolinfo['completedyear'] ?? null;
+          $thisperson['country'] = $schoolinfo['country'] ?? "";
+          $thisperson['school'] = $schoolinfo['school'] ?? "";
+          $thisperson['schoolid'] = $schoolinfo['schoolid'] ?? "";
 
           if ($thisperson['dissertation_id'] == "")
           {
