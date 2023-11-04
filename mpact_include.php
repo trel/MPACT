@@ -1997,6 +1997,8 @@ function generate_profs_at_dept($school_id,$discipline_id)
 function find_profs_at_dept($school_id,$discipline_id)
 {
   global $dbh;
+
+  $listing = "";
   $query = "SELECT professors
               FROM profs_at_dept
               WHERE
